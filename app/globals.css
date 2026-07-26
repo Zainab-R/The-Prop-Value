@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+:root{
+  --background:#ffffff;
+  --foreground:#0f172a;
+
+  --primary:#102A43;
+  --primary-light:#1E3A5F;
+
+  --accent:#F97316;
+  --accent-light:#FB923C;
+
+  --muted:#F8FAFC;
+
+  --border:#E2E8F0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html{
+  scroll-behavior:smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body{
+  min-height: 100vh;
+  background-image: linear-gradient(rgba(11, 31, 58, 0.72), rgba(11, 31, 58, 0.72)), url('/dha-multan-gate.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color:var(--foreground);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.gradient-text {
+  background: linear-gradient(90deg, #102a43, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-bg {
+  background:
+    radial-gradient(circle at top left, rgba(249,115,22,0.15), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(30,58,95,0.12), transparent 35%);
+}
+
+.feature-card {
+  transition: all .3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
 }

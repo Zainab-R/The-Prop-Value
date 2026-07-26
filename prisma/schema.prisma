@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password      String?
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  valuations    Valuation[]
+}
+
+model Valuation {
+  id                 String   @id @default(cuid())
+
+  userId             String
+
+  sector             String
+  block              String
+  propertyType       String
+  propertySize       String
+
+  constructionStatus String
+
+  estimatedMin       Float
+  estimatedMax       Float
+
+  createdAt          DateTime @default(now())
+
+  user               User @relation(fields: [userId], references: [id])
+}
