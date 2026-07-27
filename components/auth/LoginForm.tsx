@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
-import axios from "axios";
 import toast from "react-hot-toast";
-
 import { useForm } from "react-hook-form";
-
 import Link from "next/link";
 
 import PasswordInput from "./PasswordInput";
@@ -21,6 +19,7 @@ export default function LoginForm() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const {
     register,
@@ -29,25 +28,32 @@ export default function LoginForm() {
   } = useForm<LoginInput>();
 
   async function onSubmit(data: LoginInput) {
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      const response = await axios.post(
-        "/api/auth/login",
-        data
-      );
+    const result = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
 
-      toast.success(response.data.message);
+    setLoading(false);
 
-      router.push("/dashboard");
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          "Login failed."
-      );
-    } finally {
-      setLoading(false);
+    if (result?.error) {
+      toast.error(result.error);
+      return;
     }
+
+    toast.success("Login successful!");
+
+    router.push("/dashboard");
+  }
+
+  async function handleGoogleLogin() {
+    setGoogleLoading(true);
+
+    await signIn("google", {
+      callbackUrl: "/dashboard",
+    });
   }
 
   return (
@@ -55,6 +61,33 @@ export default function LoginForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-5"
     >
+      {/* Google Login */}
+
+      <button
+        type="button"
+        onClick={handleGoogleLogin}
+        disabled={googleLoading}
+        className="w-full rounded-xl border border-slate-300 bg-white py-4 font-semibold transition hover:bg-slate-50 disabled:opacity-60"
+      >
+        {googleLoading ? "Redirecting..." : "Continue with Google"}
+      </button>
+
+      {/* Divider */}
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-300"></div>
+        </div>
+
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-white px-3 text-slate-500">
+            OR
+          </span>
+        </div>
+      </div>
+
+      {/* Email */}
+
       <div>
         <input
           type="email"
@@ -72,6 +105,8 @@ export default function LoginForm() {
         )}
       </div>
 
+      {/* Password */}
+
       <div>
         <PasswordInput
           register={register}
@@ -86,18 +121,23 @@ export default function LoginForm() {
         )}
       </div>
 
+      {/* Login Button */}
+
       <button
+        type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-orange-500 py-4 font-semibold text-white hover:bg-orange-600 disabled:opacity-60"
+        className="w-full rounded-xl bg-orange-500 py-4 font-semibold text-white transition hover:bg-orange-600 disabled:opacity-60"
       >
         {loading ? "Signing In..." : "Login"}
       </button>
+
+      {/* Register Link */}
 
       <div className="text-center text-sm">
         Don't have an account?{" "}
         <Link
           href="/auth/register"
-          className="font-semibold text-orange-500"
+          className="font-semibold text-orange-500 hover:underline"
         >
           Register
         </Link>
