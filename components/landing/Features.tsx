@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { motion } from "framer-motion";
 import {
@@ -14,38 +15,44 @@ const features = [
   {
     title: "Smart Valuation",
     description:
-      "Estimate property prices using configurable market rules and detailed property information.",
+      "Estimate property prices using configurable market rules, current sector rates, and detailed property information for accurate and reliable results.",
     icon: Home,
+    link: "/features/smart-valuation",
   },
   {
     title: "Location Intelligence",
     description:
-      "Evaluate sectors, blocks, corner plots, boulevard locations, and nearby amenities.",
+      "Evaluate sectors, blocks, corner plots, boulevard locations, and nearby amenities to understand how location influences property value.",
     icon: MapPinned,
+    link: "/features/location-intelligence",
   },
   {
     title: "Detailed Analysis",
     description:
-      "Understand exactly which factors increased or decreased the estimated value.",
+      "View a complete breakdown of the factors that increased or decreased the estimated value, ensuring full transparency.",
     icon: BarChart3,
+    link: "/features/detailed-analysis",
   },
   {
     title: "Construction Insights",
     description:
-      "Compare plots, under-construction homes, and completed luxury houses.",
+      "Compare plot values, under-construction homes, and completed luxury houses using intelligent construction-based analysis.",
     icon: Building2,
+    link: "/features/construction-insights",
   },
   {
     title: "Transparent Estimates",
     description:
-      "Every estimate includes a clear explanation of how the final range was calculated.",
+      "Every valuation includes a clear explanation of pricing, adjustments, and calculation methods for complete confidence.",
     icon: ShieldCheck,
+    link: "/features/transparent-estimates",
   },
   {
     title: "Admin Managed Pricing",
     description:
-      "Sector rates and adjustment factors can be updated without changing application code.",
+      "Sector prices and adjustment factors are managed through the admin panel, allowing market updates without changing application code.",
     icon: Home,
+    link: "/features/admin-managed-pricing",
   },
 ];
 
@@ -139,25 +146,23 @@ export default function Features() {
                 <p className="mt-5 leading-8 text-slate-600">
                   {feature.description}
                 </p>
+<Link
+  href={feature.link}
+  className="
+    mt-8
+    flex
+    items-center
+    gap-2
+    font-semibold
+    text-orange-500
+    transition-all
+    group-hover:gap-4
+  "
+>
+  Learn More
 
-                <button
-                  className="
-                  mt-8
-                  flex
-                  items-center
-                  gap-2
-                  font-semibold
-                  text-orange-500
-                  transition-all
-                  group-hover:gap-4
-                  "
-                >
-                  Learn More
-
-                  <ArrowRight
-                    className="h-4 w-4"
-                  />
-                </button>
+  <ArrowRight className="h-4 w-4" />
+</Link>
 
               </motion.div>
 
