@@ -66,10 +66,13 @@ model Estimate {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   sector String
-  block String?
 
   propertyType String
   propertySize String
+
+  cornerPlot Boolean @default(false)
+  parkFacing Boolean @default(false)
+  mainBoulevard Boolean @default(false)
 
   constructionStatus String?
 
@@ -88,4 +91,5 @@ model Estimate {
   estimatedMax Decimal @db.Decimal(12,2)
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -1,11 +1,28 @@
-export default function QuickActions() {
+import Link from "next/link";
+
+interface QuickActionProps {
+  title: string;
+  description: string;
+  href: string;
+}
+
+export default function QuickAction({
+  title,
+  description,
+  href,
+}: QuickActionProps) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-[#102A43]">Quick Actions</h3>
-      <div className="mt-4 flex gap-3">
-        <button className="rounded-xl bg-orange-500 px-4 py-2 text-white">New Estimate</button>
-        <button className="rounded-xl border border-slate-200 px-4 py-2 text-slate-700">View History</button>
-      </div>
-    </div>
+    <Link
+      href={href}
+      className="block rounded-xl border border-slatenpm run dev-200 bg-white p-5 transition hover:border-orange-500 hover:shadow-md"
+    >
+      <h3 className="text-lg font-semibold text-[#102A43]">
+        {title}
+      </h3>
+
+      <p className="mt-2 text-sm text-slate-500">
+        {description}
+      </p>
+    </Link>
   );
 }
