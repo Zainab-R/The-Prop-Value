@@ -63,9 +63,9 @@ export default function Navbar() {
           />
 
           <div>
-            <h1 className="text-lg font-bold text-white">
-              Prop Value
-            </h1>
+            <h1 className="text-lg font-normal text-white">
+  The Prop <span className="text-[#B87333]">Value</span>
+</h1>
 
             <p className="text-xs text-blue-100">
               DHA Multan

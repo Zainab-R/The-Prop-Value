@@ -19,66 +19,58 @@ export default function Footer() {
         <div className="grid gap-16 lg:grid-cols-4">
 
           {/* Company */}
+<div>
+  <div className="flex items-center gap-4">
+    <Image
+      src="/logo/logo.jpeg"
+      alt="Prop Value Logo"
+      width={70}
+      height={70}
+      className="rounded-lg bg-white p-1"
+    />
 
-          <div>
+    <div>
+      <h2 className="text-xl font-normal">
+  <span className="text-white">The Prop </span>
+  <span className="text-[#C97A2B]">Value</span>
+</h2>
 
-            <div className="flex items-center gap-3">
+      <p className="text-lg text-slate-300">
+        DHA Multan
+      </p>
+    </div>
+  </div>
 
-              <Image
-                src="/logo/02269141-a3df-45c9-984a-80cc8aacddbf.jpeg"
-                alt="Prop Value"
-                width={52}
-                height={52}
-                className="rounded-md object-contain"
-              />
+  <p className="mt-6 leading-8 text-slate-300">
+    Prop Value helps users estimate the approximate cost of purchasing or
+    constructing plots and houses in DHA Multan through transparent and
+    intelligent property valuation.
+  </p>
 
-              <div>
+  <div className="mt-8 flex gap-4">
+    <a
+      href="#"
+      className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
+    >
+      <Globe size={20} />
+    </a>
 
-                <h2 className="text-2xl font-bold">
-                  Prop Value
-                </h2>
+    <a
+      href="#"
+      className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
+    >
+      <BadgeCheck size={20} />
+    </a>
 
-                <p className="text-sm text-slate-300">
-                  DHA Multan
-                </p>
-
-              </div>
-
-            </div>
-
-            <p className="mt-6 leading-8 text-slate-300">
-              Prop Value helps users estimate the approximate
-              cost of purchasing or constructing plots and
-              houses in DHA Multan through transparent and
-              intelligent property valuation.
-            </p>
-
-            <div className="mt-8 flex gap-4">
-
-              <a
-                href="#"
-                className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
-              >
-                <Globe size={20} />
-              </a>
-
-              <a
-                href="#"
-                className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
-              >
-                <BadgeCheck size={20} />
-              </a>
-
-              <a
-                href="#"
-                className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
-              >
-                <Send size={20} />
-              </a>
-
-            </div>
-
-          </div>
+    <a
+      href="#"
+      className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
+    >
+      <Send size={20} />
+    </a>
+  </div>
+</div>
+     
 
           {/* Navigation */}
 

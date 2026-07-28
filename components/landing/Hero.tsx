@@ -39,7 +39,7 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="mt-8 max-w-2xl text-xl leading-9 text-slate-600">
+          <p className="mt-8 max-w-2xl text-xl leading-9 text-white-600">
             Prop Value helps you estimate the cost of purchasing or
             constructing plots and houses in DHA Multan using
             configurable market pricing and property-specific factors.
@@ -65,17 +65,17 @@ export default function Hero() {
           <div className="mt-14 flex flex-wrap gap-8">
             <div>
               <h3 className="text-3xl font-bold text-[#102A43]">25+</h3>
-              <p className="text-slate-500">DHA Sectors</p>
+              <p className="text-ivory-500">DHA Sectors</p>
             </div>
 
             <div>
               <h3 className="text-3xl font-bold text-[#102A43]">100+</h3>
-              <p className="text-slate-500">Property Factors</p>
+              <p className="text-ivory-500">Property Factors</p>
             </div>
 
             <div>
               <h3 className="text-3xl font-bold text-[#102A43]">Fast</h3>
-              <p className="text-slate-500">Estimate Generation</p>
+              <p className="text-ivory-500">Estimate Generation</p>
             </div>
           </div>
         </motion.div>

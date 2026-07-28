@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { motion } from "framer-motion";
 import {
@@ -16,25 +17,27 @@ const steps = [
     number: "01",
     title: "Enter Property Details",
     description:
-      "Select the sector, block, property type, size, construction status, luxury level, and available amenities.",
+      "Provide your property's location, type, size, and features to begin the valuation process.",
     icon: ClipboardList,
+    link: "/how-it-works/enter-property-details",
   },
   {
     number: "02",
     title: "Market Analysis",
     description:
-      "Our valuation engine combines configurable sector rates with property-specific adjustment factors.",
+      "We analyze current market trends, sector rates, and property characteristics to estimate value.",
     icon: Cpu,
+    link: "/how-it-works/market-analysis",
   },
   {
     number: "03",
     title: "Receive Your Estimate",
     description:
-      "Instantly receive an estimated price range together with the major factors affecting the valuation.",
+      "View an instant estimated price range along with the key factors influencing your property's value.",
     icon: BadgeDollarSign,
+    link: "/how-it-works/receive-estimate",
   },
 ];
-
 export default function HowItWorks() {
   return (
     <section
@@ -114,10 +117,13 @@ export default function HowItWorks() {
                     {step.description}
                   </p>
 
-                  <button className="mt-8 flex items-center gap-2 font-semibold text-orange-500 transition-all hover:gap-4">
-                    Learn More
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
+                  <Link
+  href={step.link}
+  className="inline-flex items-center gap-2 text-orange-500 font-semibold hover:gap-3 transition-all"
+>
+  Learn More
+  <ArrowRight className="h-4 w-4" />
+</Link>
                 </motion.div>
               );
             })}
