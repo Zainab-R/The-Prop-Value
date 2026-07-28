@@ -1,15 +1,17 @@
 import { getServerSession } from "next-auth";
-
 import { authOptions } from "@/lib/auth";
 import StatCard from "@/components/dashboard/StatCard";
 import QuickAction from "@/components/dashboard/QuickActions";
+import PropertyChart from "@/components/dashboard/PropertyChart";
+import MarketOverview from "@/components/dashboard/MarketOverview";
+import RecentActivity from "@/components/dashboard/RecentActivity";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
   return (
     <div className="space-y-8">
-      {/* Welcome Card */}
+      {/* Welcome */}
       <section className="rounded-2xl bg-white p-8 shadow-sm">
         <h1 className="text-3xl font-bold text-[#102A43]">
           Welcome back,
@@ -20,8 +22,8 @@ export default async function DashboardPage() {
         </h1>
 
         <p className="mt-2 text-slate-600">
-          Manage your property valuations, compare estimates, and
-          explore market insights from your dashboard.
+          Manage your property valuations, compare estimates, and explore
+          market insights from your dashboard.
         </p>
       </section>
 
@@ -79,17 +81,17 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      {/* Recent Estimates */}
-      <section className="rounded-2xl bg-white p-8 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold text-[#102A43]">
-          Recent Estimates
-        </h2>
+      {/* Dashboard Analytics */}
+      <section className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <PropertyChart />
+        </div>
 
-        <p className="text-slate-500">
-          No estimates yet. Your recent property valuations will
-          appear here.
-        </p>
+        <MarketOverview />
       </section>
+
+      {/* Recent Activity */}
+      <RecentActivity />
     </div>
   );
 }

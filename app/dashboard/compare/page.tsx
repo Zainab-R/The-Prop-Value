@@ -1,13 +1,20 @@
-export default function Page() {
-  return (
-    <div className="rounded-2xl bg-white p-8 shadow-sm">
-      <h1 className="text-3xl font-bold text-[#102A43]">
-        Coming Soon
-      </h1>
+import EstimateForm from "@/components/estimate/EstimateForm";
 
-      <p className="mt-3 text-slate-600">
-        This section will be implemented in a later phase.
-      </p>
+export default function EstimatePage() {
+  return (
+    <div className="space-y-8">
+      <div className="rounded-2xl bg-white p-8 shadow-sm">
+        <h1 className="text-3xl font-bold text-[#102A43]">
+          Property Valuation
+        </h1>
+
+        <p className="mt-2 text-slate-600">
+          Fill in the property details below to receive an estimated market
+          value for your property in DHA Multan.
+        </p>
+      </div>
+
+      <EstimateForm />
     </div>
   );
 }
