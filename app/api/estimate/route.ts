@@ -35,7 +35,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = calculateEstimate(validated);
+    // Database-driven valuation
+    const result = await calculateEstimate(validated);
 
     const estimate = await prisma.estimate.create({
       data: {
@@ -44,7 +45,6 @@ export async function POST(req: Request) {
         userId: user.id,
 
         estimatedMin: result.estimatedMin,
-
         estimatedMax: result.estimatedMax,
       },
     });

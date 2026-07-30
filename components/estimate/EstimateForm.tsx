@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useRouter } from "next/navigation";
 import {
   estimateSchema,
   EstimateInput,
@@ -112,25 +112,25 @@ export default function EstimateForm() {
         return [];
     }
   }, [propertyType]);
+  const router = useRouter();
 
   async function onSubmit(data: EstimateInput) {
   try {
     const response = await fetch("/api/estimate", {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json",
       },
-
       body: JSON.stringify(data),
     });
 
     const result = await response.json();
 
-    console.log(result);
+    if (!response.ok) {
+      throw new Error(result.error || "Failed to estimate");
+    }
 
-    // Next step:
-    // router.push(`/dashboard/result/${result.estimate.id}`);
+    window.location.href = `/dashboard/result?id=${result.estimate.id}`;
   } catch (error) {
     console.error(error);
   }
