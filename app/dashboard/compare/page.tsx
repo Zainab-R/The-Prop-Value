@@ -1,20 +1,43 @@
-import EstimateForm from "@/components/estimate/EstimateForm";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
+import CompareSelector from "@/components/dashboard/compare/CompareSelector";
 
-export default function EstimatePage() {
+export default async function ComparePropertiesPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.email) {
+    redirect("/login");
+  }
+
+  const estimates = await prisma.estimate.findMany({
+    where: {
+      user: {
+        email: session.user.email,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const formattedEstimates = estimates.map((estimate: (typeof estimates)[number]) => ({
+    id: estimate.id,
+    sector: estimate.sector,
+    propertyType: estimate.propertyType,
+    propertySize: estimate.propertySize,
+    estimatedMin: estimate.estimatedMin.toString(),
+    estimatedMax: estimate.estimatedMax.toString(),
+  }));
+
   return (
-    <div className="space-y-8">
-      <div className="rounded-2xl bg-white p-8 shadow-sm">
-        <h1 className="text-3xl font-bold text-[#102A43]">
-          Property Valuation
-        </h1>
+    <div className="mx-auto max-w-7xl px-6 py-8">
+      <h1 className="mb-8 text-3xl font-bold">
+        Compare Properties
+      </h1>
 
-        <p className="mt-2 text-slate-600">
-          Fill in the property details below to receive an estimated market
-          value for your property in DHA Multan.
-        </p>
-      </div>
-
-      <EstimateForm />
+      <CompareSelector estimates={formattedEstimates} />
     </div>
   );
 }
