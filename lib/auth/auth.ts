@@ -62,10 +62,30 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           name: user.name,
           email: user.email,
-        };
+          role: user.role,
+        } as any;
       },
     }),
   ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = (user as any).role;
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.sub!;
+        session.user.role = token.role as "USER" | "ADMIN";
+      }
+
+      return session;
+    },
+  },
 
   pages: {
     signIn: "/auth/login",
