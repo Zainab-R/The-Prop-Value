@@ -210,21 +210,21 @@ export default function Footer() {
               © {new Date().getFullYear()} Prop Value. All rights reserved.
             </p>
 
-            <div className="flex gap-8">
+           <div className="flex gap-8">
 
-              <a
-                href="#"
-                className="hover:text-white"
-              >
-                Privacy Policy
-              </a>
+            <Link
+            href="/privacy-policy"
+            className="transition-colors hover:text-white"
+          >
+            Privacy Policy
+          </Link>
 
-              <a
-                href="#"
-                className="hover:text-white"
-              >
-                Terms of Service
-              </a>
+          <Link
+            href="/terms-of-service"
+            className="transition-colors hover:text-white"
+          >
+            Terms of Service
+          </Link>
 
             </div>
 
