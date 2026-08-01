@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
+
 
 import {
   LayoutDashboard,
@@ -63,23 +65,30 @@ export default function Sidebar() {
   return (
     <aside className="flex h-screen w-72 flex-col border-r border-slate-200 bg-white">
       {/* Logo */}
-      <div className="border-b border-slate-200 p-6">
-        <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-orange-500 p-3 text-white">
-            <Building2 size={24} />
-          </div>
+<Link
+  href="/"
+  className="flex items-center gap-3 px-5 py-5 border-b border-gray-200"
+>
+  <Image
+    src="/logo/logo.jpeg"
+    alt="The Prop Value"
+    width={55}
+    height={55}
+    className="object-contain"
+    priority
+  />
 
-          <div>
-            <h1 className="text-xl font-bold text-[#102A43]">
-              Prop Value
-            </h1>
+  <div className="flex flex-col">
+    <h1 className="whitespace-nowrap text-xl font-normal leading-tight">
+      <span className="text-[#123A6D]">The Prop </span>
+      <span className="text-[#B87333]">Value</span>
+    </h1>
 
-            <p className="text-sm text-slate-500">
-              DHA Multan
-            </p>
-          </div>
-        </div>
-      </div>
+    <p className="text-sm text-gray-500 leading-tight">
+      DHA Multan
+    </p>
+  </div>
+</Link>
 
       {/* Main Navigation */}
       <div className="px-5 pt-6">
