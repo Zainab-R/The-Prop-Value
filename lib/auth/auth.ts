@@ -62,10 +62,50 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           name: user.name,
           email: user.email,
+          image: user.image,
+          role: user.role,
         };
       },
     }),
   ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = (user as any).id;
+      }
+
+      if (token.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: {
+            email: token.email,
+          },
+        });
+
+        if (dbUser) {
+          token.name = dbUser.name;
+          token.email = dbUser.email;
+          token.picture = dbUser.image;
+          (token as any).role = dbUser.role;
+        }
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as any).id = token.id;
+        (session.user as any).role = (token as any).role;
+
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture as string | null;
+      }
+
+      return session;
+    },
+  },
 
   pages: {
     signIn: "/auth/login",
