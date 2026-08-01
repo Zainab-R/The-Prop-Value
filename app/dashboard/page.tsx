@@ -13,8 +13,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Welcome */}
-    <DashboardHero />
+      <DashboardHero
+        name={session?.user?.name || "User"}
+      />
 
       {/* Statistics */}
       <StatsCards />

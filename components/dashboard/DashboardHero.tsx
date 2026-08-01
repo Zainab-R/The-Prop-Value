@@ -1,6 +1,6 @@
 "use client";
-import Image from "next/image";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -11,7 +11,11 @@ import {
   Building2,
 } from "lucide-react";
 
-export default function DashboardHero() {
+interface DashboardHeroProps {
+  name: string;
+}
+
+export default function DashboardHero({ name }: DashboardHeroProps) {
   return (
     <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#123A6D] via-[#1E3A8A] to-[#2563EB] p-8 text-white shadow-lg">
       {/* Background Decoration */}
@@ -26,11 +30,11 @@ export default function DashboardHero() {
             Smart Property Valuation
           </span>
 
-          <h1 className="mt-5 text-4xl font-bold leading-tight">
-            Welcome back,
-            <br />
-            <span className="text-orange-300">Shanzay Masood</span>
-          </h1>
+         <h1 className="mt-5 text-4xl font-bold leading-tight">
+  Welcome back,
+  <br />
+  <span className="text-orange-300">{name}</span>
+</h1>
 
           <p className="mt-5 max-w-xl text-base text-blue-100">
             Estimate, compare and track DHA Multan property values using
