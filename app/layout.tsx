@@ -22,13 +22,37 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
+          {children}
+
           <Toaster
             position="top-right"
+            reverseOrder={false}
+            gutter={12}
             toastOptions={{
-              duration: 4000,
+              duration: 3000,
+
+              style: {
+                borderRadius: "12px",
+                background: "#123A6D",
+                color: "#fff",
+                padding: "16px",
+              },
+
+              success: {
+                iconTheme: {
+                  primary: "#F97316",
+                  secondary: "#fff",
+                },
+              },
+
+              error: {
+                iconTheme: {
+                  primary: "#EF4444",
+                  secondary: "#fff",
+                },
+              },
             }}
           />
-          {children}
         </AuthProvider>
       </body>
     </html>

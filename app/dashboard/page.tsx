@@ -1,49 +1,72 @@
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import StatsCards from "@/components/dashboard/StatsCards";
-import QuickActions from "@/components/dashboard/QuickActions";
-import PropertyTrend from "@/components/dashboard/PropertyTrend";
-import MarketOverview from "@/components/dashboard/MarketOverview";
-import RecentActivity from "@/components/dashboard/RecentActivity";
-import DashboardHero from "@/components/dashboard/DashboardHero";
-import RecentEstimates from "@/components/dashboard/RecentEstimates";
 
-export default async function DashboardPage() {
+import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
+
+export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  // Remove this check for now until role authentication is completed
+  // if (session.user.role !== "ADMIN") {
+  //   redirect("/dashboard");
+  // }
+
+  const [
+    totalUsers,
+    totalEstimates,
+    totalMarketRates,
+    totalLuxuryRates,
+    totalRoadRates,
+    totalAmenities,
+  ] = await Promise.all([
+    prisma.user.count(),
+    prisma.estimate.count(),
+    prisma.marketRate.count(),
+    prisma.luxuryRate.count(),
+    prisma.roadRate.count(),
+    prisma.amenityRate.count(),
+  ]);
 
   return (
     <div className="space-y-8">
-      {/* Welcome */}
-    <DashboardHero />
+      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
 
-      {/* Statistics */}
-      <StatsCards />
-
-      {/* Quick Actions */}
-    <QuickActions />
-
-      {/* Dashboard Analytics */}
-      <section className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <PropertyTrend />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="rounded-xl border p-6">
+          <h2 className="text-lg font-semibold">Users</h2>
+          <p className="text-3xl font-bold">{totalUsers}</p>
         </div>
 
-        <MarketOverview />
-      </section>
+        <div className="rounded-xl border p-6">
+          <h2 className="text-lg font-semibold">Estimates</h2>
+          <p className="text-3xl font-bold">{totalEstimates}</p>
+        </div>
 
-      {/* Recent Estimates */}
-<div className="mt-8">
-  <RecentEstimates />
-</div>
+        <div className="rounded-xl border p-6">
+          <h2 className="text-lg font-semibold">Market Rates</h2>
+          <p className="text-3xl font-bold">{totalMarketRates}</p>
+        </div>
 
-{/* Recent Activity */}
-<div className="mt-8">
-  <RecentActivity />
-</div>
+        <div className="rounded-xl border p-6">
+          <h2 className="text-lg font-semibold">Luxury Rates</h2>
+          <p className="text-3xl font-bold">{totalLuxuryRates}</p>
+        </div>
+
+        <div className="rounded-xl border p-6">
+          <h2 className="text-lg font-semibold">Road Rates</h2>
+          <p className="text-3xl font-bold">{totalRoadRates}</p>
+        </div>
+
+        <div className="rounded-xl border p-6">
+          <h2 className="text-lg font-semibold">Amenities</h2>
+          <p className="text-3xl font-bold">{totalAmenities}</p>
+        </div>
+      </div>
     </div>
-    
-
-
-    
   );
 }
