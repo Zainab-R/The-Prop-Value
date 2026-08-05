@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           name: user.name,
           email: user.email,
+          role: user.role,
         };
       },
     }),
@@ -71,6 +72,25 @@ export const authOptions: NextAuthOptions = {
 
   pages: {
     signIn: "/login",
+  },
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.sub!;
+        session.user.role = token.role as "USER" | "ADMIN";
+      }
+
+      return session;
+    },
   },
 
   secret: process.env.NEXTAUTH_SECRET,

@@ -1,18 +1,20 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+
+import DashboardHero from "@/components/dashboard/DashboardHero";
 import StatsCards from "@/components/dashboard/StatsCards";
 import QuickActions from "@/components/dashboard/QuickActions";
 import PropertyTrend from "@/components/dashboard/PropertyTrend";
 import MarketOverview from "@/components/dashboard/MarketOverview";
-import RecentActivity from "@/components/dashboard/RecentActivity";
-import DashboardHero from "@/components/dashboard/DashboardHero";
 import RecentEstimates from "@/components/dashboard/RecentEstimates";
+import RecentActivity from "@/components/dashboard/RecentActivity";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-6">
+      {/* Hero Section */}
       <DashboardHero
         name={session?.user?.name || "User"}
       />
@@ -21,9 +23,9 @@ export default async function DashboardPage() {
       <StatsCards />
 
       {/* Quick Actions */}
-    <QuickActions />
+      <QuickActions />
 
-      {/* Dashboard Analytics */}
+      {/* Analytics */}
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <PropertyTrend />
@@ -33,18 +35,14 @@ export default async function DashboardPage() {
       </section>
 
       {/* Recent Estimates */}
-<div className="mt-8">
-  <RecentEstimates />
-</div>
+      <section>
+        <RecentEstimates />
+      </section>
 
-{/* Recent Activity */}
-<div className="mt-8">
-  <RecentActivity />
-</div>
+      {/* Recent Activity */}
+      <section>
+        <RecentActivity />
+      </section>
     </div>
-    
-
-
-    
   );
 }

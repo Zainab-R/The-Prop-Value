@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { User, Settings, LogOut } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 
 interface UserDropdownProps {
   name: string;
@@ -14,8 +14,18 @@ export default function UserDropdown({
   email,
   image,
 }: UserDropdownProps) {
+  const initials = name
+    ? name
+        .split(" ")
+        .map((word) => word[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "U";
+
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2">
+    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
+      {/* Avatar */}
       {image ? (
         <img
           src={image}
@@ -23,11 +33,12 @@ export default function UserDropdown({
           className="h-11 w-11 rounded-full object-cover"
         />
       ) : (
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-orange-500 text-white">
-          <User size={20} />
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-orange-500 font-semibold text-white">
+          {initials}
         </div>
       )}
 
+      {/* User Details */}
       <div className="hidden md:block">
         <p className="font-semibold text-[#102A43]">
           {name}
@@ -38,10 +49,11 @@ export default function UserDropdown({
         </p>
       </div>
 
+      {/* Logout */}
       <button
         onClick={() =>
           signOut({
-            callbackUrl: "/login",
+            callbackUrl: "/auth/login",
           })
         }
         className="ml-2 rounded-lg p-2 transition hover:bg-slate-100"

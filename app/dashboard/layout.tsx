@@ -1,24 +1,17 @@
-import type { ReactNode } from "react";
-
 import Sidebar from "@/components/dashboard/Sidebar";
-import TopNavbar from "@/components/dashboard/TopNavbar";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#F5F8FC]">
       <Sidebar />
 
-      <div className="flex flex-1 flex-col">
-        <TopNavbar />
-
-        <main className="flex-1 p-8">
-          {children}
-        </main>
-      </div>
+      <main className="flex-1 p-8">
+        {children}
+      </main>
     </div>
   );
 }
