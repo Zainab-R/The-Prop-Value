@@ -45,14 +45,24 @@ export default function LoginForm() {
 
     toast.success("Login successful!");
 
-    router.push("/dashboard");
-  }
+    // Get the latest session (includes the user's role)
+    const sessionResponse = await fetch("/api/auth/session");
+    const session = await sessionResponse.json();
+
+    if (session?.user?.role === "ADMIN") {
+      router.push("/admin");
+    } else {
+      router.push("/dashboard");
+    }
+
+    router.refresh();
+    }
 
   async function handleGoogleLogin() {
     setGoogleLoading(true);
 
-    await signIn("google", {
-      callbackUrl: "/dashboard",
+    const result = await signIn("google", {
+    callbackUrl: "/auth/redirect",
     });
   }
 

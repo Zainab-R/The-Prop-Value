@@ -8,6 +8,19 @@ export default async function UsersPage() {
     },
   });
 
+  // TEMPORARY DEBUG LOGS
+  console.log("========== USERS FROM DATABASE ==========");
+  console.log("Total Users:", users.length);
+
+  console.table(
+    users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    }))
+  );
+
   return (
     <div className="space-y-8">
       <div>
