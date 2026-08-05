@@ -1,70 +1,44 @@
-import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 
-export default async function AdminDashboard() {
+export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/login");
   }
 
-  // Remove this check for now until role authentication is completed
-  // if (session.user.role !== "ADMIN") {
-  //   redirect("/dashboard");
-  // }
-
-  const [
-    totalUsers,
-    totalEstimates,
-    totalMarketRates,
-    totalLuxuryRates,
-    totalRoadRates,
-    totalAmenities,
-  ] = await Promise.all([
-    prisma.user.count(),
-    prisma.estimate.count(),
-    prisma.marketRate.count(),
-    prisma.luxuryRate.count(),
-    prisma.roadRate.count(),
-    prisma.amenityRate.count(),
-  ]);
-
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+      <h1 className="text-4xl font-bold text-[#123A6D]">
+        Welcome, {session.user.name}
+      </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="rounded-xl border p-6">
-          <h2 className="text-lg font-semibold">Users</h2>
-          <p className="text-3xl font-bold">{totalUsers}</p>
+      <p className="text-slate-600">
+        Welcome to Prop Value. From here you can:
+      </p>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-[#123A6D]">
+            New Property Estimate
+          </h2>
+
+          <p className="mt-2 text-slate-500">
+            Calculate the estimated value of your property.
+          </p>
         </div>
 
-        <div className="rounded-xl border p-6">
-          <h2 className="text-lg font-semibold">Estimates</h2>
-          <p className="text-3xl font-bold">{totalEstimates}</p>
-        </div>
+        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-[#123A6D]">
+            Estimate History
+          </h2>
 
-        <div className="rounded-xl border p-6">
-          <h2 className="text-lg font-semibold">Market Rates</h2>
-          <p className="text-3xl font-bold">{totalMarketRates}</p>
-        </div>
-
-        <div className="rounded-xl border p-6">
-          <h2 className="text-lg font-semibold">Luxury Rates</h2>
-          <p className="text-3xl font-bold">{totalLuxuryRates}</p>
-        </div>
-
-        <div className="rounded-xl border p-6">
-          <h2 className="text-lg font-semibold">Road Rates</h2>
-          <p className="text-3xl font-bold">{totalRoadRates}</p>
-        </div>
-
-        <div className="rounded-xl border p-6">
-          <h2 className="text-lg font-semibold">Amenities</h2>
-          <p className="text-3xl font-bold">{totalAmenities}</p>
+          <p className="mt-2 text-slate-500">
+            View your previous property valuations.
+          </p>
         </div>
       </div>
     </div>
