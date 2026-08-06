@@ -44,12 +44,15 @@ export default async function ProfilePage() {
     );
   }
 
-  const initials = (user.name ?? "U")
-    .split(" ")
-    .map((word) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const nameParts: string[] = (user.name ?? "U")
+  .trim()
+  .split(/\s+/);
+
+const initials = nameParts
+  .map((word: string) => word.charAt(0))
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
