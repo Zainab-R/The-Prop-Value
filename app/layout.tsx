@@ -30,21 +30,18 @@ export default function RootLayout({
             gutter={12}
             toastOptions={{
               duration: 3000,
-
               style: {
                 borderRadius: "12px",
                 background: "#123A6D",
                 color: "#fff",
                 padding: "16px",
               },
-
               success: {
                 iconTheme: {
                   primary: "#F97316",
                   secondary: "#fff",
                 },
               },
-
               error: {
                 iconTheme: {
                   primary: "#EF4444",
