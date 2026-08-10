@@ -1,6 +1,7 @@
 interface DashboardCardProps {
   title: string;
-  value: number;
+  value: string | number;
+  icon: LucideIcon;
 }
 
 export default function DashboardCard({
