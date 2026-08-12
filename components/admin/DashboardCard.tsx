@@ -1,3 +1,4 @@
+import { LucideIcon } from "lucide-react";
 interface DashboardCardProps {
   title: string;
   value: string | number;
