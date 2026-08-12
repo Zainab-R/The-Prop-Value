@@ -28,8 +28,6 @@ export const estimateSchema = z.object({
 
   luxuryLevel: z.string().optional(),
 
-  roadType: z.string().min(1, "Please select road type"),
-
   amenities: z.array(z.string()).default([]),
 });
 
