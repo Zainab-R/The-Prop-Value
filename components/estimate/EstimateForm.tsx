@@ -11,6 +11,7 @@ import {
 
 import ToggleSwitch from "./ToggleSwitch";
 import AmenitiesCheckbox from "./AmenitiesCheckbox";
+import { sectorPlotSizes } from "@/lib/sectorPlotSizes";
 
 const sectors = [
   "A",
@@ -54,12 +55,13 @@ const amenitiesList = [
 
 export default function EstimateForm() {
   const {
-    register,
-    control,
-    watch,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<EstimateInput>({
+  register,
+  control,
+  watch,
+  setValue,
+  handleSubmit,
+  formState: { errors, isSubmitting },
+} = useForm<EstimateInput>({
     resolver: zodResolver(estimateSchema),
 
     defaultValues: {
@@ -72,46 +74,35 @@ export default function EstimateForm() {
   });
 
   const propertyType = watch("propertyType");
+  const sector = watch("sector");
 
   const propertySizes = useMemo(() => {
-    switch (propertyType) {
-      case "Residential Plot":
-        return [
-          "5 Marla",
-          "8 Marla",
-          "10 Marla",
-          "1 Kanal",
-          "2 Kanal",
-          "4 Kanal",
-        ];
+  if (!sector) {
+    return [];
+  }
 
-      case "House":
-        return [
-          "5 Marla",
-          "8 Marla",
-          "10 Marla",
-          "1 Kanal",
-          "2 Kanal",
-        ];
+  // Residential plots and houses use the sector-specific sizes
+  if (
+    propertyType === "Residential Plot" ||
+    propertyType === "House"
+  ) {
+    return sectorPlotSizes[sector] ?? [];
+  }
 
-      case "Commercial Plot":
-        return [
-          "2 Marla",
-          "4 Marla",
-          "8 Marla",
-        ];
+  // Keep your existing commercial/shop sizes
+  if (
+    propertyType === "Commercial Plot" ||
+    propertyType === "Shop"
+  ) {
+    return [
+      "2 Marla",
+      "4 Marla",
+      "8 Marla",
+    ];
+  }
 
-      case "Shop":
-        return [
-          "2 Marla",
-          "4 Marla",
-          "8 Marla",
-        ];
-
-      default:
-        return [];
-    }
-  }, [propertyType]);
+  return [];
+}, [propertyType, sector]);
   const router = useRouter();
 
   async function onSubmit(data: EstimateInput) {
@@ -186,7 +177,11 @@ export default function EstimateForm() {
         </label>
 
         <select
-          {...register("sector")}
+          {...register("sector", {
+          onChange: () => {
+          setValue("propertySize", "");
+          },
+          })}
           className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500"
         >
           <option value="">Select Sector</option>
@@ -212,33 +207,40 @@ export default function EstimateForm() {
 
       <div>
         <label className="mb-2 block font-medium text-slate-700">
-          Property Size
+        Property Size
         </label>
 
         <select
-          {...register("propertySize")}
-          className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500"
+        {...register("propertySize")}
+        disabled={!sector || !propertyType || propertySizes.length === 0}
+        className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
         >
-          <option value="">
-            Select Property Size
-          </option>
+        <option value="">
+        {!propertyType
+        ? "Select Property Type First"
+        : !sector
+        ? "Select Sector First"
+        : propertySizes.length === 0
+        ? "No sizes available"
+        : "Select Property Size"}
+        </option>
 
-          {propertySizes.map((size) => (
-            <option
-              key={size}
-              value={size}
-            >
-              {size}
-            </option>
-          ))}
-        </select>
+        {propertySizes.map((size) => (
+        <option
+        key={size}
+        value={size}
+      >
+        {size}
+      </option>
+    ))}
+  </select>
 
-        {errors.propertySize && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.propertySize.message}
-          </p>
-        )}
-      </div>
+  {errors.propertySize && (
+    <p className="mt-1 text-sm text-red-500">
+      {errors.propertySize.message}
+    </p>
+  )}
+</div>
 
       {/* Construction Status */}
 
