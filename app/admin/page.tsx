@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import DashboardCard from "@/components/admin/DashboardCard";
 import RecentEstimatesTable from "@/components/admin/RecentEstimatesTable";
-
+import AdminLogoutButton from "@/components/admin/AdminLogoutButton";
 import EstimatesChart from "@/components/admin/charts/EstimatesChart";
 import PropertyTypeChart from "@/components/admin/charts/PropertyTypeChart";
 import SectorChart from "@/components/admin/charts/SectorChart";
@@ -16,6 +16,7 @@ import {
   Map,
   Trees,
   ArrowRight,
+  LogOut,
   TrendingUp,
   Activity,
   UserPlus,
@@ -155,14 +156,18 @@ export default async function AdminDashboard() {
 
       <div className="mb-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
 
+        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-[#123A6D]">
-            Admin Dashboard
-          </h1>
+        <h1 className="text-4xl font-bold text-[#123A6D]">
+        Admin Dashboard
+        </h1>
 
-          <p className="mt-2 text-slate-500">
-            Welcome back! Here's an overview of your platform.
-          </p>
+        <p className="mt-2 text-slate-500">
+        Welcome back! Here's an overview of your platform.
+        </p>
+        </div>
+
+        <AdminLogoutButton />
         </div>
 
         <div className="rounded-2xl border border-orange-100 bg-orange-50 px-6 py-4">
