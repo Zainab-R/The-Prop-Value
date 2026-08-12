@@ -1,46 +1,48 @@
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-
 import { authOptions } from "@/lib/auth";
+
+import DashboardHero from "@/components/dashboard/DashboardHero";
+import StatsCards from "@/components/dashboard/StatsCards";
+import QuickActions from "@/components/dashboard/QuickActions";
+import PropertyTrend from "@/components/dashboard/PropertyTrend";
+import MarketOverview from "@/components/dashboard/MarketOverview";
+import RecentEstimates from "@/components/dashboard/RecentEstimates";
+import RecentActivity from "@/components/dashboard/RecentActivity";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    redirect("/login");
-  }
-
   return (
-    <div className="space-y-8">
-      <h1 className="text-4xl font-bold text-[#123A6D]">
-        Welcome, {session.user.name}
-      </h1>
+    <div className="space-y-8 p-6">
+      {/* Hero Section */}
+      <DashboardHero
+        name={session?.user?.name || "User"}
+      />
 
-      <p className="text-slate-600">
-        Welcome to Prop Value. From here you can:
-      </p>
+      {/* Statistics */}
+      <StatsCards />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-[#123A6D]">
-            New Property Estimate
-          </h2>
+      {/* Quick Actions */}
+      <QuickActions />
 
-          <p className="mt-2 text-slate-500">
-            Calculate the estimated value of your property.
-          </p>
+      {/* Analytics */}
+      <section className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <PropertyTrend />
         </div>
 
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-[#123A6D]">
-            Estimate History
-          </h2>
+        <MarketOverview />
+      </section>
 
-          <p className="mt-2 text-slate-500">
-            View your previous property valuations.
-          </p>
-        </div>
-      </div>
+      {/* Recent Estimates */}
+      <section>
+        <RecentEstimates />
+      </section>
+
+      {/* Recent Activity */}
+      <section>
+        <RecentActivity />
+      </section>
     </div>
   );
 }

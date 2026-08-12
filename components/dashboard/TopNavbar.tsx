@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { Search, Bell, CalendarDays } from "lucide-react";
 import { useSession } from "next-auth/react";
-
 import UserDropdown from "./UserDropdown";
 
 const pageTitles: Record<string, string> = {
@@ -33,16 +32,15 @@ export default function TopNavbar() {
   }, []);
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-8 py-5">
+    <header className="flex items-center justify-between border-b border-white/10 bg-[#123A6D] px-8 py-5 shadow-md">
       {/* Left */}
       <div>
-        <h1 className="text-3xl font-bold text-[#102A43]">
+        <h1 className="text-3xl font-bold text-white">
           {title}
         </h1>
 
-        <div className="mt-2 flex items-center gap-2 text-sm text-slate-500">
+        <div className="mt-2 flex items-center gap-2 text-sm text-blue-200">
           <CalendarDays size={16} />
-
           <span>{today}</span>
         </div>
       </div>

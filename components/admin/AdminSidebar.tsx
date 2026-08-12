@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import {
   LayoutDashboard,
   Users,
-  Calculator,
   TrendingUp,
   Gem,
   Route,
+  Calculator,
   Settings,
 } from "lucide-react";
 
@@ -54,39 +55,77 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 min-h-screen bg-[#123A6D] text-white">
-      <div className="border-b border-white/10 p-6">
-        <h2 className="text-2xl font-bold text-white">
-        Prop Value
-        </h2>
-        <p className="mt-1 text-sm text-slate-300">
-        Admin Panel
+    <aside className="flex min-h-screen w-64 flex-col bg-[#0F2A5F] text-white">
+      {/* ================= Logo ================= */}
+      <Link
+        href="/admin"
+        className="flex items-center px-6 py-6"
+      >
+        <div className="flex flex-col">
+          <h1 className="whitespace-nowrap text-xl font-semibold leading-tight">
+            <span className="text-white">The Prop </span>
+            <span className="text-[#F4A261]">Value</span>
+          </h1>
+
+          <p className="text-sm text-blue-200">
+            Admin Panel
+          </p>
+        </div>
+      </Link>
+
+      {/* ================= Main Menu ================= */}
+      <div className="px-5 pt-2">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-blue-200">
+          Main Menu
         </p>
-       </div>
 
-      <nav className="flex flex-col p-4 gap-2">
-        {links.map((link) => {
-          const Icon = link.icon;
+        <nav className="space-y-2">
+          {links.map((link) => {
+            const Icon = link.icon;
 
-          const active = pathname === link.href;
+            const active =
+              pathname === link.href ||
+              (link.href !== "/admin" &&
+                pathname.startsWith(`${link.href}/`));
 
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all duration-200
-                ${
-                    active
-                        ? "bg-[#F97316] text-white shadow-lg"
-                        : "text-slate-200 hover:bg-white/10 hover:text-white"
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`group flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-300 ${
+                  active
+                    ? "bg-orange-500 text-white shadow-lg"
+                    : "text-blue-100 hover:bg-white/10 hover:text-white"
                 }`}
-            >
-              <Icon size={20} />
-              {link.name}
-            </Link>
-          );
-        })}
-      </nav>
+              >
+                <Icon
+                  size={20}
+                  className={`transition ${
+                    active
+                      ? "text-white"
+                      : "text-blue-200 group-hover:text-white"
+                  }`}
+                />
+
+                <span className="font-medium">
+                  {link.name}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* ================= Bottom ================= */}
+      <div className="mt-auto border-t border-white/10 p-5">
+        <p className="text-center text-xs text-blue-200">
+          The Prop Value
+        </p>
+
+        <p className="mt-1 text-center text-xs text-blue-300">
+          DHA Multan
+        </p>
+      </div>
     </aside>
   );
 }

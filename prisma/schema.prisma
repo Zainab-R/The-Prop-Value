@@ -14,14 +14,12 @@ model User {
   password      String?
   image         String?
   emailVerified DateTime?
-  role          Role       @default(USER)
-
-  accounts      Account[]
-  sessions      Session[]
-  estimates     Estimate[]
-
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  role          Role       @default(USER)
+  accounts      Account[]
+  estimates     Estimate[]
+  sessions      Session[]
 }
 
 model Account {

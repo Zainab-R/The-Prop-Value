@@ -23,6 +23,9 @@ export default function DifferenceCards({
   const higher =
     firstAvg > secondAvg ? "Property 1" : "Property 2";
 
+  const betterValue =
+    firstAvg < secondAvg ? "Property 1" : "Property 2";
+
   const formatPrice = (value: number) =>
     new Intl.NumberFormat("en-PK").format(value);
 
@@ -54,9 +57,7 @@ export default function DifferenceCards({
         </p>
 
         <h2 className="mt-2 text-2xl font-bold text-green-600">
-          {firstAvg < secondAvg
-            ? "Property 1"
-            : "Property 2"}
+          {betterValue}
         </h2>
       </div>
     </div>
