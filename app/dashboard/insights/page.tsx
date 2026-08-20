@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import MarketContent from "@/components/dashboard/insights/MarketContent";
 import FadeInUp from "@/components/shared/FadeInUp";
 
+export const dynamic = "force-dynamic";
+
 export default async function MarketInsightsPage() {
   const rates = await prisma.marketRate.findMany({
     orderBy: {
