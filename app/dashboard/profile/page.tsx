@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -18,7 +19,7 @@ export default async function ProfilePage() {
   if (!session?.user?.email) {
     return (
       <div className="rounded-2xl bg-white p-8 shadow-sm">
-        <h2 className="text-xl font-semibold text-[#102A43]">
+        <h2 className="text-xl font-semibold text-primary">
           User not found
         </h2>
       </div>
@@ -29,15 +30,23 @@ export default async function ProfilePage() {
     where: {
       email: session.user.email,
     },
-    include: {
-      estimates: true,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      image: true,
+      createdAt: true,
+      _count: {
+        select: { estimates: true },
+      },
     },
   });
 
   if (!user) {
     return (
       <div className="rounded-2xl bg-white p-8 shadow-sm">
-        <h2 className="text-xl font-semibold text-[#102A43]">
+        <h2 className="text-xl font-semibold text-primary">
           User not found
         </h2>
       </div>
@@ -59,7 +68,7 @@ const initials = nameParts
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-[#102A43]">
+          <h1 className="text-3xl font-bold text-primary">
             My Profile
           </h1>
 
@@ -83,9 +92,11 @@ const initials = nameParts
 
           {/* Avatar */}
           {user.image ? (
-            <img
+            <Image
               src={user.image}
               alt={user.name ?? "Profile"}
+              width={112}
+              height={112}
               className="h-28 w-28 rounded-full object-cover"
             />
           ) : (
@@ -96,7 +107,7 @@ const initials = nameParts
 
           {/* User Details */}
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-[#102A43]">
+            <h2 className="text-2xl font-bold text-primary">
               {user.name || "No Name"}
             </h2>
 
@@ -114,7 +125,7 @@ const initials = nameParts
 
       {/* Statistics */}
       <section>
-        <h2 className="mb-4 text-xl font-semibold text-[#102A43]">
+        <h2 className="mb-4 text-xl font-semibold text-primary">
           Statistics
         </h2>
 
@@ -122,7 +133,7 @@ const initials = nameParts
           <StatCard
             icon={<FileText size={22} />}
             title="Total Estimates"
-            value={user.estimates.length.toString()}
+            value={user._count.estimates.toString()}
           />
 
           <StatCard
@@ -136,7 +147,7 @@ const initials = nameParts
       {/* Personal Information */}
       <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-200 px-8 py-5">
-          <h2 className="text-xl font-semibold text-[#102A43]">
+          <h2 className="text-xl font-semibold text-primary">
             Personal Information
           </h2>
         </div>
@@ -192,7 +203,7 @@ function StatCard({
             {title}
           </p>
 
-          <h3 className="mt-1 text-2xl font-bold text-[#102A43]">
+          <h3 className="mt-1 text-2xl font-bold text-primary">
             {value}
           </h3>
         </div>
@@ -222,7 +233,7 @@ function InfoRow({
         </span>
       </div>
 
-      <span className="break-all font-semibold text-[#102A43]">
+      <span className="break-all font-semibold text-primary">
         {value}
       </span>
     </div>

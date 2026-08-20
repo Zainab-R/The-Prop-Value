@@ -10,13 +10,12 @@ export default async function AdminSettingsPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
-    redirect("/auth/login");
+    redirect("/login");
   }
 
-  const userId = (session.user as any).id;
-  const role = (session.user as any).role;
+  const userId = session.user.id;
 
-  if (!userId || role !== "ADMIN") {
+  if (!userId || session.user.role !== "ADMIN") {
     redirect("/dashboard");
   }
 
@@ -32,7 +31,7 @@ export default async function AdminSettingsPage() {
   });
 
   if (!admin) {
-    redirect("/auth/login");
+    redirect("/login");
   }
 
   return (

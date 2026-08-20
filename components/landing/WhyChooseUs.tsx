@@ -64,7 +64,7 @@ export default function WhyChooseUs() {
             WHY PROP VALUE
           </span>
 
-          <h2 className="mt-6 text-5xl font-bold text-[#102A43]">
+          <h2 className="mt-6 text-5xl font-bold text-primary">
             Built to Help You Make
             Better Property Decisions
           </h2>
@@ -102,7 +102,7 @@ export default function WhyChooseUs() {
                   <Icon className="h-8 w-8 text-white" />
                 </div>
 
-                <h3 className="text-2xl font-bold text-[#102A43]">
+                <h3 className="text-2xl font-bold text-primary">
                   {reason.title}
                 </h3>
 

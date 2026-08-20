@@ -1,16 +1,44 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { changePassword } from "@/components/settings/changePassword";
+import NotificationSettings from "./NotificationSettings";
 
 export default function SettingsPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+
+    try {
+      const result = await changePassword(
+        currentPassword,
+        newPassword,
+        confirmPassword
+      );
+
+      toast.success(result.message);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update password."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-8">
       {/* Page Header */}
-      <div className="mb-8">
+      <div>
         <h1 className="text-4xl font-bold text-[#071A3D]">
           Settings
         </h1>
@@ -21,7 +49,10 @@ export default function SettingsPage() {
       </div>
 
       {/* Change Password Card */}
-      <div className="w-full max-w-4xl rounded-2xl bg-white p-10 shadow-md">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-4xl rounded-2xl bg-white p-10 shadow-md"
+      >
         <h2 className="mb-10 text-3xl font-bold text-[#071A3D]">
           Change Password
         </h2>
@@ -35,10 +66,11 @@ export default function SettingsPage() {
 
             <input
               type="password"
+              required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               placeholder="Enter current password"
-              className="w-full rounded-xl border border-gray-300 px-5 py-3 text-base outline-none focus:border-[#123A6D]"
+              className="w-full rounded-xl border border-gray-300 px-5 py-3 text-base outline-none focus:border-primary"
             />
           </div>
 
@@ -50,10 +82,12 @@ export default function SettingsPage() {
 
             <input
               type="password"
+              required
+              minLength={8}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Enter new password"
-              className="w-full rounded-xl border border-gray-300 px-5 py-3 text-base outline-none focus:border-[#123A6D]"
+              className="w-full rounded-xl border border-gray-300 px-5 py-3 text-base outline-none focus:border-primary"
             />
           </div>
 
@@ -65,21 +99,26 @@ export default function SettingsPage() {
 
             <input
               type="password"
+              required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm new password"
-              className="w-full rounded-xl border border-gray-300 px-5 py-3 text-base outline-none focus:border-[#123A6D]"
+              className="w-full rounded-xl border border-gray-300 px-5 py-3 text-base outline-none focus:border-primary"
             />
           </div>
 
           {/* Button */}
           <button
-            className="mt-2 w-full rounded-xl bg-orange-500 py-4 text-base font-bold text-white transition hover:bg-orange-600"
+            type="submit"
+            disabled={saving}
+            className="mt-2 w-full rounded-xl bg-orange-500 py-4 text-base font-bold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Update Password
+            {saving ? "Updating..." : "Update Password"}
           </button>
         </div>
-      </div>
+      </form>
+
+      <NotificationSettings />
     </div>
   );
 }

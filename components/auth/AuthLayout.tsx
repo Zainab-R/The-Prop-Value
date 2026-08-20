@@ -18,7 +18,7 @@ export default function AuthLayout({
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto grid min-h-screen max-w-7xl lg:grid-cols-2">
         {/* Left */}
-        <div className="hidden bg-[#102A43] lg:flex flex-col justify-center px-16 text-white">
+        <div className="hidden bg-primary lg:flex flex-col justify-center px-16 text-white">
           <h1 className="text-5xl font-bold leading-tight">
             Welcome to
             <br />
@@ -48,7 +48,7 @@ export default function AuthLayout({
               ← Back to Home
             </Link>
 
-            <h2 className="mt-6 text-3xl font-bold text-[#102A43]">
+            <h2 className="mt-6 text-3xl font-bold text-primary">
               {title}
             </h2>
 

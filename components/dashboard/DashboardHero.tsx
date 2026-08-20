@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -17,7 +16,7 @@ interface DashboardHeroProps {
 
 export default function DashboardHero({ name }: DashboardHeroProps) {
   return (
-    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#123A6D] via-[#1E3A8A] to-[#2563EB] p-8 text-white shadow-lg">
+    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary via-[#1E3A8A] to-[#2563EB] p-8 text-white shadow-lg">
       {/* Background Decoration */}
       <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-3xl"></div>
       <div className="absolute -bottom-16 left-1/2 h-40 w-40 rounded-full bg-orange-400/20 blur-3xl"></div>
@@ -84,7 +83,7 @@ export default function DashboardHero({ name }: DashboardHeroProps) {
             <Building2 size={110} className="text-orange-300" />
 
            <h1 className="whitespace-nowrap text-xl font-semibold leading-tight">
-      <span className="text-[#123A6D]">The Prop </span>
+      <span className="text-primary">The Prop </span>
       <span className="text-[#B87333]">Value</span>
     </h1>
 

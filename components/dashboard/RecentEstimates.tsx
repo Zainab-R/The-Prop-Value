@@ -3,37 +3,21 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-const estimates = [
-  {
-    id: 1,
-    sector: "Sector R",
-    type: "Residential",
-    size: "10 Marla",
-    value: "PKR 2.35 Cr",
-    date: "Today",
-    status: "Completed",
-  },
-  {
-    id: 2,
-    sector: "Sector X",
-    type: "Commercial",
-    size: "5 Marla",
-    value: "PKR 3.90 Cr",
-    date: "Yesterday",
-    status: "Completed",
-  },
-  {
-    id: 3,
-    sector: "Sector D",
-    type: "Residential",
-    size: "1 Kanal",
-    value: "PKR 5.20 Cr",
-    date: "28 Jul",
-    status: "Completed",
-  },
-];
+interface Estimate {
+  id: string;
+  sector: string;
+  propertyType: string;
+  propertySize: string;
+  estimatedMin: number;
+  estimatedMax: number;
+  createdAt: string;
+}
 
-export default function RecentEstimates() {
+export default function RecentEstimates({
+  estimates,
+}: {
+  estimates: Estimate[];
+}) {
   return (
     <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
@@ -49,60 +33,67 @@ export default function RecentEstimates() {
 
         <Link
           href="/dashboard/history"
-          className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700"
+          className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
         >
           View All
           <ArrowRight size={16} />
         </Link>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-200 text-left text-sm text-gray-500">
-              <th className="pb-3">Sector</th>
-              <th className="pb-3">Type</th>
-              <th className="pb-3">Size</th>
-              <th className="pb-3">Estimated Value</th>
-              <th className="pb-3">Status</th>
-              <th className="pb-3">Date</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {estimates.map((estimate) => (
-              <tr
-                key={estimate.id}
-                className="border-b border-gray-100 hover:bg-gray-50 transition"
-              >
-                <td className="py-4 font-medium">{estimate.sector}</td>
-
-                <td className="py-4 text-gray-600">
-                  {estimate.type}
-                </td>
-
-                <td className="py-4 text-gray-600">
-                  {estimate.size}
-                </td>
-
-                <td className="py-4 font-semibold text-blue-600">
-                  {estimate.value}
-                </td>
-
-                <td className="py-4">
-                  <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-                    {estimate.status}
-                  </span>
-                </td>
-
-                <td className="py-4 text-gray-500">
-                  {estimate.date}
-                </td>
+      {estimates.length === 0 ? (
+        <p className="py-10 text-center text-sm text-gray-500">
+          You haven&apos;t created any estimates yet.{" "}
+          <Link href="/dashboard/estimate" className="font-medium text-accent hover:underline">
+            Create your first one
+          </Link>
+          .
+        </p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-200 text-left text-sm text-gray-500">
+                <th className="pb-3">Sector</th>
+                <th className="pb-3">Type</th>
+                <th className="pb-3">Size</th>
+                <th className="pb-3">Estimated Value</th>
+                <th className="pb-3">Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+
+            <tbody>
+              {estimates.map((estimate) => (
+                <tr
+                  key={estimate.id}
+                  className="border-b border-gray-100 hover:bg-gray-50 transition"
+                >
+                  <td className="py-4 font-medium">
+                    <Link href={`/dashboard/result?id=${estimate.id}`}>
+                      {estimate.sector}
+                    </Link>
+                  </td>
+
+                  <td className="py-4 text-gray-600">
+                    {estimate.propertyType}
+                  </td>
+
+                  <td className="py-4 text-gray-600">
+                    {estimate.propertySize}
+                  </td>
+
+                  <td className="py-4 font-semibold text-primary">
+                    Rs. {estimate.estimatedMin.toLocaleString()} – {estimate.estimatedMax.toLocaleString()}
+                  </td>
+
+                  <td className="py-4 text-gray-500">
+                    {new Date(estimate.createdAt).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

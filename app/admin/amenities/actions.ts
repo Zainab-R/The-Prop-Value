@@ -2,11 +2,14 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth/guards";
 
 export async function createAmenity(
   name: string,
   value: number
 ) {
+  await requireAdmin();
+
   const trimmedName = name.trim();
 
   if (!trimmedName) {
@@ -27,7 +30,7 @@ export async function createAmenity(
     throw new Error("An amenity with this name already exists.");
   }
 
-  await prisma.amenityRate.create({
+  const created = await prisma.amenityRate.create({
     data: {
       name: trimmedName,
       value,
@@ -36,6 +39,8 @@ export async function createAmenity(
 
   revalidatePath("/admin/amenities");
   revalidatePath("/admin");
+
+  return { id: created.id, name: created.name, value: Number(created.value) };
 }
 
 export async function updateAmenity(
@@ -43,6 +48,8 @@ export async function updateAmenity(
   name: string,
   value: number
 ) {
+  await requireAdmin();
+
   if (!id) {
     throw new Error("Amenity ID is required.");
   }
@@ -85,6 +92,8 @@ export async function updateAmenity(
 }
 
 export async function deleteAmenity(id: string) {
+  await requireAdmin();
+
   if (!id) {
     throw new Error("Amenity ID is required.");
   }

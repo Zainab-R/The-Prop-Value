@@ -24,9 +24,22 @@ export async function DELETE(
 
   const { id } = await params;
 
-  const estimate = await prisma.estimate.findUnique({
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { id: true },
+  });
+
+  if (!user) {
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  const estimate = await prisma.estimate.findFirst({
     where: {
       id,
+      userId: user.id,
     },
   });
 
@@ -39,7 +52,7 @@ export async function DELETE(
 
   await prisma.estimate.delete({
     where: {
-      id,
+      id: estimate.id,
     },
   });
 

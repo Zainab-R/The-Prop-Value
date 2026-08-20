@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Camera, Save } from "lucide-react";
 
 interface User {
@@ -126,18 +127,20 @@ export default function EditProfilePage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify({ name: user.name, email: user.email }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        throw new Error("Update failed");
+        throw new Error(data?.message || "Update failed");
       }
 
       router.push("/dashboard/profile");
       router.refresh();
     } catch (err) {
       console.error(err);
-      alert("Unable to update profile.");
+      alert(err instanceof Error ? err.message : "Unable to update profile.");
     } finally {
       setSaving(false);
     }
@@ -172,7 +175,7 @@ export default function EditProfilePage() {
         </Link>
 
         <div>
-          <h1 className="text-4xl font-bold text-[#102A43]">
+          <h1 className="text-4xl font-bold text-primary">
             Edit Profile
           </h1>
 
@@ -188,9 +191,11 @@ export default function EditProfilePage() {
           {/* Profile Photo */}
           <div className="flex flex-col items-center gap-5 border-b border-slate-200 pb-8 sm:flex-row">
             {preview ? (
-              <img
+              <Image
                 src={preview}
                 alt="Profile"
+                width={112}
+                height={112}
                 className="h-28 w-28 rounded-full object-cover"
               />
             ) : (
@@ -233,7 +238,7 @@ export default function EditProfilePage() {
 
           {/* Name */}
           <div>
-            <label className="mb-2 block font-medium text-[#102A43]">
+            <label className="mb-2 block font-medium text-primary">
               Full Name
             </label>
 
@@ -252,7 +257,7 @@ export default function EditProfilePage() {
 
           {/* Email */}
           <div>
-            <label className="mb-2 block font-medium text-[#102A43]">
+            <label className="mb-2 block font-medium text-primary">
               Email Address
             </label>
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FeaturePage from "@/components/FeaturePage";
 import {
   MapPinned,
@@ -5,6 +6,12 @@ import {
   Compass,
   Map,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Location Intelligence | Prop Value",
+  description:
+    "Discover how a property's location influences its market value through sector analysis, surrounding amenities, and strategic positioning.",
+};
 
 export default function LocationIntelligencePage() {
   return (

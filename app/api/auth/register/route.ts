@@ -1,11 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { ZodError } from "zod";
 
 import { prisma } from "@/lib/prisma";
 import { registerSchema } from "@/lib/validations/register";
+import { checkRateLimit, getClientIp } from "@/lib/utils/rateLimit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed } = checkRateLimit(`register:${ip}`, 5, 10 * 60 * 1000);
+
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Too many registration attempts. Please try again later.",
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
 
     // Validate input
@@ -59,11 +74,11 @@ export async function POST(req: NextRequest) {
         status: 201,
       }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     // Zod validation errors
-    if (error.name === "ZodError") {
+    if (error instanceof ZodError) {
       return NextResponse.json(
         {
           success: false,

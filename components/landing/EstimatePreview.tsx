@@ -39,8 +39,8 @@ export default function EstimatePreview() {
             PROPERTY VALUATION
           </span>
 
-          <h2 className="mt-6 text-5xl font-bold text-[#102A43]">
-            Understand Your Property's
+          <h2 className="mt-6 text-5xl font-bold text-primary">
+            Understand Your Property&apos;s
             Market Value
           </h2>
 
@@ -97,7 +97,7 @@ export default function EstimatePreview() {
 
             <div>
 
-              <h3 className="text-2xl font-bold text-[#102A43]">
+              <h3 className="text-2xl font-bold text-primary">
                 Estimated Value
               </h3>
 
@@ -111,7 +111,7 @@ export default function EstimatePreview() {
 
           </div>
 
-          <div className="mt-8 rounded-2xl bg-gradient-to-r from-[#102A43] to-[#1E3A5F] p-8 text-white">
+          <div className="mt-8 rounded-2xl bg-gradient-to-r from-primary to-[#1E3A5F] p-8 text-white">
 
             <p className="text-slate-300">
               Estimated Price
@@ -135,7 +135,7 @@ export default function EstimatePreview() {
 
             <div className="mb-5 flex items-center justify-between">
 
-              <h4 className="font-bold text-[#102A43]">
+              <h4 className="font-bold text-primary">
                 Property Adjustments
               </h4>
 
@@ -170,7 +170,7 @@ export default function EstimatePreview() {
 
           <div className="mt-10">
 
-            <h4 className="mb-6 font-bold text-[#102A43]">
+            <h4 className="mb-6 font-bold text-primary">
               Sector Comparison
             </h4>
 

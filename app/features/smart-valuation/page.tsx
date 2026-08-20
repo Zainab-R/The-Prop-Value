@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FeaturePage from "@/components/FeaturePage";
 import {
   Home,
@@ -5,6 +6,12 @@ import {
   MapPinned,
   DollarSign,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Smart Valuation | Prop Value",
+  description:
+    "Estimate property values accurately using configurable market pricing and intelligent valuation factors.",
+};
 
 export default function SmartValuationPage() {
   return (

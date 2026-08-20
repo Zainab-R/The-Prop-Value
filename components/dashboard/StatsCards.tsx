@@ -2,50 +2,60 @@
 
 import {
   FileText,
-  Heart,
-  TrendingUp,
+  CalendarClock,
   DollarSign,
+  MapPinned,
 } from "lucide-react";
 
-const stats = [
-  {
-    title: "Total Estimates",
-    value: "24",
-    change: "+5 this month",
-    icon: FileText,
-    bg: "bg-blue-100",
-    color: "text-blue-600",
-  },
-  {
-    title: "Saved Estimates",
-    value: "8",
-    change: "Recently Saved",
-    icon: Heart,
-    bg: "bg-red-100",
-    color: "text-red-500",
-  },
-  {
-    title: "Average Value",
-    value: "PKR 2.45 Cr",
-    change: "Current Average",
-    icon: DollarSign,
-    bg: "bg-green-100",
-    color: "text-green-600",
-  },
-  {
-    title: "Market Growth",
-    value: "+4.2%",
-    change: "Last 30 Days",
-    icon: TrendingUp,
-    bg: "bg-orange-100",
-    color: "text-orange-500",
-  },
-];
+interface Stats {
+  totalEstimates: number;
+  estimatesThisMonth: number;
+  averageValue: number;
+  sectorsExplored: number;
+}
 
-export default function StatsCards() {
+export default function StatsCards({ stats }: { stats: Stats }) {
+  const items = [
+    {
+      title: "Total Estimates",
+      value: stats.totalEstimates.toString(),
+      change: "All time",
+      icon: FileText,
+      bg: "bg-blue-100",
+      color: "text-blue-600",
+    },
+    {
+      title: "This Month",
+      value: stats.estimatesThisMonth.toString(),
+      change: "New estimates",
+      icon: CalendarClock,
+      bg: "bg-orange-100",
+      color: "text-orange-500",
+    },
+    {
+      title: "Average Value",
+      value:
+        stats.averageValue > 0
+          ? `PKR ${(stats.averageValue / 10000000).toFixed(2)} Cr`
+          : "—",
+      change: "Across your estimates",
+      icon: DollarSign,
+      bg: "bg-green-100",
+      color: "text-green-600",
+    },
+    {
+      title: "Sectors Explored",
+      value: stats.sectorsExplored.toString(),
+      change: "Distinct sectors",
+      icon: MapPinned,
+      bg: "bg-purple-100",
+      color: "text-purple-600",
+    },
+  ];
+
   return (
     <section className="grid gap-6 mt-8 sm:grid-cols-2 xl:grid-cols-4">
-      {stats.map((item) => {
+      {items.map((item) => {
         const Icon = item.icon;
 
         return (

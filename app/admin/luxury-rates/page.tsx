@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import DashboardCard from "@/components/admin/DashboardCard";
-import SearchBar from "@/components/admin/SearchBar";
-import LuxuryRatesTable from "@/components/admin/LuxuryRatesTable";
-import { Gem, Plus, TrendingUp, TrendingDown } from "lucide-react";
+import { Gem, TrendingUp, TrendingDown } from "lucide-react";
 import LuxuryRatesClient from "@/components/admin/LuxuryRatesClient";
 export default async function LuxuryRatesPage() {
   const [totalLuxuryRates, luxuryRates] = await Promise.all([
@@ -27,7 +25,7 @@ export default async function LuxuryRatesPage() {
   return (
     <div className="space-y-8">
       {/* Hero */}
-      <div className="flex flex-col justify-between gap-6 rounded-3xl bg-gradient-to-r from-[#123A6D] to-[#1E5AA8] p-8 text-white shadow-lg lg:flex-row lg:items-center">
+      <div className="flex flex-col justify-between gap-6 rounded-3xl bg-gradient-to-r from-primary to-[#1E5AA8] p-8 text-white shadow-lg lg:flex-row lg:items-center">
         <div>
           <div className="mb-3 flex items-center gap-3">
             <Gem className="h-8 w-8 text-yellow-300" />

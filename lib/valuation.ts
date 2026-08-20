@@ -5,6 +5,9 @@ export interface EstimateData {
   propertySize: string;
   sector: string;
 
+  // Only meaningful when sector === "C" — see lib/propertyOptions.ts.
+  villaType?: string;
+
   cornerPlot: boolean;
   parkFacing: boolean;
   mainBoulevard: boolean;
@@ -27,12 +30,15 @@ export async function calculateEstimate(data: EstimateData) {
       propertyType: data.propertyType,
       propertySize: data.propertySize,
       sector: data.sector,
+      villaType: data.villaType || null,
     },
   });
 
   if (!marketRate) {
     throw new Error(
-      `Market rate not found for ${data.propertyType} (${data.propertySize}) in Sector ${data.sector}`
+      data.villaType
+        ? `Market rate not found for ${data.propertyType} (${data.propertySize}) in ${data.villaType}, Sector ${data.sector}`
+        : `Market rate not found for ${data.propertyType} (${data.propertySize}) in Sector ${data.sector}`
     );
   }
 

@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Prop Value",
+  description:
+    "How Prop Value collects, uses, and protects the information you provide while using our property valuation platform.",
+};
 
 export default function PrivacyPolicyPage() {
   return (
@@ -6,7 +13,7 @@ export default function PrivacyPolicyPage() {
   className="min-h-screen bg-cover bg-center bg-fixed"
   style={{
     backgroundImage:
-      "linear-gradient(rgba(11,31,58,0.72), rgba(11,31,58,0.72)), url('/privacy-bg.jpg')",
+      "linear-gradient(160deg, var(--color-primary) 0%, #0B1F3A 60%, #081226 100%)",
   }}
 >
       <div className="mx-auto max-w-5xl px-6 py-20">
@@ -24,7 +31,7 @@ export default function PrivacyPolicyPage() {
 
         <div className="space-y-8 rounded-3xl border border-white/20 bg-white/95 p-10 shadow-2xl backdrop-blur-md">
           <section>
-            <h2 className="mb-3 text-2xl font-semibold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-semibold text-primary">
               Introduction
             </h2>
             <p className="text-slate-600 leading-8">
@@ -35,7 +42,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-2xl font-semibold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-semibold text-primary">
               Information We Collect
             </h2>
 
@@ -47,7 +54,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-2xl font-semibold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-semibold text-primary">
               How We Use Your Information
             </h2>
 
@@ -59,7 +66,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-2xl font-semibold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-semibold text-primary">
               Data Protection
             </h2>
 
@@ -70,7 +77,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-2xl font-semibold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-semibold text-primary">
               Contact
             </h2>
 

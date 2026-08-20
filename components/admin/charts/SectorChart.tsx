@@ -27,34 +27,40 @@ export default function SectorChart({ data }: Props) {
 
   return (
     <div className="rounded-2xl border bg-white p-6 shadow-sm">
-      <h2 className="mb-5 text-xl font-bold text-[#123A6D]">
+      <h2 className="mb-5 text-xl font-bold text-primary">
         Top Sectors
       </h2>
 
-      <ResponsiveContainer width="100%" height={320}>
-        <BarChart
-          data={chartData}
-          layout="vertical"
-        >
-          <CartesianGrid strokeDasharray="3 3" />
+      {chartData.length === 0 ? (
+        <div className="flex h-80 items-center justify-center text-sm text-slate-400">
+          No estimate data available yet.
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={320}>
+          <BarChart
+            data={chartData}
+            layout="vertical"
+          >
+            <CartesianGrid strokeDasharray="3 3" />
 
-          <XAxis type="number" />
+            <XAxis type="number" />
 
-          <YAxis
-            type="category"
-            dataKey="sector"
-            width={90}
-          />
+            <YAxis
+              type="category"
+              dataKey="sector"
+              width={90}
+            />
 
-          <Tooltip />
+            <Tooltip />
 
-          <Bar
-            dataKey="estimates"
-            fill="#123A6D"
-            radius={[0, 8, 8, 0]}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+            <Bar
+              dataKey="estimates"
+              fill="var(--color-primary)"
+              radius={[0, 8, 8, 0]}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 }

@@ -10,6 +10,8 @@ import {
   updateRoadRate,
   deleteRoadRate,
 } from "@/app/admin/road-rates/actions";
+import DeleteDialog from "@/components/admin/DeleteDialog";
+import RowActionsMenu from "@/components/shared/RowActionsMenu";
 
 interface RoadRate {
   id: string;
@@ -395,30 +397,23 @@ export default function RoadRatesClient({
                     </td>
 
                     {/* Actions */}
-                    <td className="px-7 py-5">
-
-                      <div className="flex justify-end gap-2">
-
-                        <button
-                          type="button"
-                          onClick={() => openEdit(rate)}
-                          className="rounded-lg p-2 text-blue-600 transition hover:bg-blue-100"
-                          title="Edit"
-                        >
-                          <SquarePen className="h-5 w-5" />
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => openDelete(rate)}
-                          className="rounded-lg p-2 text-red-600 transition hover:bg-red-100"
-                          title="Delete"
-                        >
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-
-                      </div>
-
+                    <td className="px-7 py-5 text-right">
+                      <RowActionsMenu
+                        ariaLabel="Road rate actions"
+                        actions={[
+                          {
+                            label: "Edit",
+                            icon: SquarePen,
+                            onClick: () => openEdit(rate),
+                          },
+                          {
+                            label: "Delete",
+                            icon: Trash2,
+                            variant: "destructive",
+                            onClick: () => openDelete(rate),
+                          },
+                        ]}
+                      />
                     </td>
 
                   </tr>
@@ -634,58 +629,19 @@ export default function RoadRatesClient({
       )}
 
       {/* =====================================================
-          DELETE MODAL
+          DELETE DIALOG
       ===================================================== */}
-      {deleteOpen && selectedRate && (
-
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-
-          <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl">
-
-            <div className="px-6 py-6">
-
-              <h2 className="text-lg font-semibold text-slate-900">
-                Delete Road Rate
-              </h2>
-
-              <p className="mt-3 text-sm text-slate-600">
-                Are you sure you want to delete{" "}
-                <strong>{selectedRate.roadType}</strong>?
-              </p>
-
-              <p className="mt-2 text-sm text-slate-500">
-                This action cannot be undone.
-              </p>
-
-              <div className="mt-6 flex justify-end gap-3">
-
-                <button
-                  type="button"
-                  onClick={closeDelete}
-                  disabled={loading}
-                  className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  disabled={loading}
-                  className="rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60"
-                >
-                  {loading ? "Deleting..." : "Delete"}
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
+      <DeleteDialog
+        open={deleteOpen && !!selectedRate}
+        onClose={closeDelete}
+        onConfirm={handleDelete}
+        title="Delete road rate"
+        description={
+          selectedRate
+            ? `Are you sure you want to delete "${selectedRate.roadType}"? This action cannot be undone.`
+            : undefined
+        }
+      />
 
     </div>
   );

@@ -43,11 +43,13 @@ export default function RegisterForm() {
       reset();
 
       router.push("/login");
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message ??
-          "Something went wrong."
-      );
+    } catch (error) {
+      const message =
+        axios.isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : "Something went wrong.";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -125,7 +127,7 @@ export default function RegisterForm() {
 
       <button
         disabled={loading}
-        className="w-full rounded-xl bg-orange-500 py-4 font-semibold text-white transition hover:bg-orange-600 disabled:opacity-60"
+        className="w-full rounded-xl bg-orange-500 py-4 font-semibold text-white transition-all duration-200 hover:bg-orange-600 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
       >
         {loading ? "Creating Account..." : "Create Account"}
       </button>

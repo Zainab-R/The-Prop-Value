@@ -2,9 +2,10 @@
 
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-import { Search, Bell, CalendarDays } from "lucide-react";
+import { CalendarDays, Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 import UserDropdown from "./UserDropdown";
+import { useSidebar } from "@/components/shared/SidebarProvider";
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -19,6 +20,7 @@ const pageTitles: Record<string, string> = {
 export default function TopNavbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const { toggle } = useSidebar();
 
   const title = pageTitles[pathname] || "Dashboard";
 
@@ -32,16 +34,26 @@ export default function TopNavbar() {
   }, []);
 
   return (
-    <header className="flex items-center justify-between border-b border-white/10 bg-[#123A6D] px-8 py-5 shadow-md">
+    <header className="flex items-center justify-between border-b border-white/10 bg-primary px-4 py-5 shadow-md sm:px-8">
       {/* Left */}
-      <div>
-        <h1 className="text-3xl font-bold text-white">
-          {title}
-        </h1>
+      <div className="flex items-center gap-4">
+        <button
+          onClick={toggle}
+          aria-label="Open menu"
+          className="rounded-lg p-2 text-white hover:bg-white/10 lg:hidden"
+        >
+          <Menu size={22} />
+        </button>
 
-        <div className="mt-2 flex items-center gap-2 text-sm text-blue-200">
-          <CalendarDays size={16} />
-          <span>{today}</span>
+        <div>
+          <h1 className="text-xl font-bold text-white sm:text-3xl">
+            {title}
+          </h1>
+
+          <div className="mt-2 hidden items-center gap-2 text-sm text-blue-200 sm:flex">
+            <CalendarDays size={16} />
+            <span>{today}</span>
+          </div>
         </div>
       </div>
 

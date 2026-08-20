@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -8,8 +9,13 @@ import {
   BarChart3,
   Home,
   ShieldCheck,
-  ArrowLeftIcon,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Receive Your Estimate | Prop Value",
+  description:
+    "Get an instant estimated market value for your property, complete with a transparent breakdown of the factors behind the number.",
+};
 
 const estimateSteps = [
   {
@@ -85,7 +91,7 @@ export default function ReceiveEstimatePage() {
       </h1>
 
       <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-200">
-        After analyzing your property's details and current market conditions,
+        After analyzing your property&apos;s details and current market conditions,
         our valuation engine instantly provides an estimated market value
         together with the key factors that influenced the calculation.
       </p>
@@ -111,13 +117,13 @@ export default function ReceiveEstimatePage() {
               UNDERSTANDING YOUR ESTIMATE
             </span>
 
-            <h2 className="mt-6 text-4xl font-bold text-[#102A43]">
-              What's Included in Your Valuation
+            <h2 className="mt-6 text-4xl font-bold text-primary">
+              What&apos;s Included in Your Valuation
             </h2>
 
             <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">
               Your estimate is more than just a price. It provides valuable
-              insights into how your property's market value was calculated.
+              insights into how your property&apos;s market value was calculated.
             </p>
           </div>
 
@@ -139,7 +145,7 @@ export default function ReceiveEstimatePage() {
                       STEP {item.number}
                     </span>
 
-                    <h3 className="mt-2 text-2xl font-bold text-[#102A43]">
+                    <h3 className="mt-2 text-2xl font-bold text-primary">
                       {item.title}
                     </h3>
 
@@ -159,7 +165,7 @@ export default function ReceiveEstimatePage() {
                   {/* CTA */}
       <section className="py-24">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="rounded-3xl bg-gradient-to-r from-[#102A43] to-[#1E3A5F] px-10 py-16 text-center shadow-2xl">
+          <div className="rounded-3xl bg-gradient-to-r from-primary to-[#1E3A5F] px-10 py-16 text-center shadow-2xl">
             <span className="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-orange-300">
               READY TO START?
             </span>
@@ -172,10 +178,16 @@ export default function ReceiveEstimatePage() {
               Enter your property details and receive an instant estimated
               market value powered by our intelligent valuation engine. The
               process is quick, transparent, and designed to help you better
-              understand your property's worth in DHA Multan.
+              understand your property&apos;s worth in DHA Multan.
             </p>
 
-            
+            <Link
+              href="/register"
+              className="mt-8 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-8 py-4 font-semibold text-white shadow-lg transition hover:-translate-y-1 hover:bg-orange-600"
+            >
+              Get Started
+              <ArrowRight className="h-5 w-5" />
+            </Link>
           </div>
         </div>
       </section>

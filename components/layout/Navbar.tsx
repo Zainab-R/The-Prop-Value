@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
+import UserDropdown from "@/components/dashboard/UserDropdown";
 
 const links = [
   {
@@ -32,6 +34,9 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
+  const dashboardHref = session?.user?.role === "ADMIN" ? "/admin" : "/dashboard";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,7 +69,7 @@ export default function Navbar() {
 
           <div>
             <h1 className="text-lg font-normal text-white">
-  The Prop <span className="text-[#B87333]">Value</span>
+  The Prop <span className="text-accent">Value</span>
 </h1>
 
             <p className="text-xs text-blue-100">
@@ -90,19 +95,38 @@ export default function Navbar() {
         {/* Buttons */}
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link
-            href="/login"
-            className="rounded-xl border border-white/30 px-5 py-2.5 font-medium text-white transition hover:bg-blue-800"
-          >
-            Login
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href={dashboardHref}
+                className="rounded-xl border border-white/30 px-5 py-2.5 font-medium text-white transition hover:bg-white/10"
+              >
+                Dashboard
+              </Link>
 
-          <Link
-            href="/register"
-            className="rounded-xl bg-orange-500 px-6 py-2.5 font-semibold text-white shadow-lg shadow-orange-300 transition hover:-translate-y-1 hover:bg-orange-600"
-          >
-            Get Started
-          </Link>
+              <UserDropdown
+                name={session?.user?.name || "User"}
+                email={session?.user?.email || ""}
+                image={session?.user?.image || ""}
+              />
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-xl border border-white/30 px-5 py-2.5 font-medium text-white transition hover:bg-white/10"
+              >
+                Login
+              </Link>
+
+              <Link
+                href="/register"
+                className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground shadow-lg shadow-orange-300 transition hover:-translate-y-1 hover:bg-[#ea580c]"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile */}
@@ -136,19 +160,30 @@ export default function Navbar() {
                 </a>
               ))}
 
-              <Link
-                href="/login"
-                className="mt-4 rounded-xl border border-white/30 px-4 py-3 text-center text-white"
-              >
-                Login
-              </Link>
+              {isLoggedIn ? (
+                <Link
+                  href={dashboardHref}
+                  className="mt-4 rounded-xl bg-accent py-3 text-center font-semibold text-accent-foreground"
+                >
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="mt-4 rounded-xl border border-white/30 px-4 py-3 text-center text-white"
+                  >
+                    Login
+                  </Link>
 
-              <Link
-                href="/register"
-                className="mt-3 rounded-xl bg-orange-500 py-3 text-center font-semibold text-white"
-              >
-                Get Started
-              </Link>
+                  <Link
+                    href="/register"
+                    className="mt-3 rounded-xl bg-accent py-3 text-center font-semibold text-accent-foreground"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}

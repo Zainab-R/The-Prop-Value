@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 
 import { authOptions } from "@/lib/auth";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminTopBar from "@/components/admin/AdminTopBar";
+import { SidebarProvider } from "@/components/shared/SidebarProvider";
 
 export default async function AdminLayout({
   children,
@@ -21,12 +23,16 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F5F8FC]">
-      <AdminSidebar />
+    <SidebarProvider>
+      <div className="flex min-h-screen bg-[#F5F8FC]">
+        <AdminSidebar />
 
-      <main className="flex-1 p-8">
-        {children}
-      </main>
-    </div>
+        <div className="flex min-h-screen flex-1 flex-col">
+          <AdminTopBar />
+
+          <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 }

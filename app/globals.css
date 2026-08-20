@@ -1,43 +1,94 @@
 @import "tailwindcss";
 
-:root{
-  --background:#ffffff;
-  --foreground:#0f172a;
+/*
+ * Design tokens — single source of truth for color, radius, and
+ * typography across the app. Declaring these inside @theme both
+ * registers them as real CSS variables (so `var(--color-primary)`
+ * works anywhere) and generates the matching Tailwind utilities
+ * (`bg-primary`, `text-primary-foreground`, `rounded-md`, etc.),
+ * which is what the shadcn/Base UI primitives in components/ui/*
+ * expect. Brand identity: white/light surfaces, navy for authority,
+ * orange reserved for accents/CTAs.
+ */
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
 
-  --primary:#102A43;
-  --primary-light:#1E3A5F;
+  --color-primary: #102a43;
+  --color-primary-light: #1e3a5f;
+  --color-primary-foreground: #ffffff;
 
-  --accent:#F97316;
-  --accent-light:#FB923C;
+  --color-accent: #f97316;
+  --color-accent-light: #fb923c;
+  --color-accent-foreground: #ffffff;
 
-  --muted:#F8FAFC;
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #102a43;
 
-  --border:#E2E8F0;
+  --color-muted: #f8fafc;
+  --color-muted-foreground: #64748b;
+
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --color-ring: #f97316;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0f172a;
+
+  --radius: 0.625rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
-html{
-  scroll-behavior:smooth;
+/* Back-compat aliases: existing code reads these bare, non-namespaced
+   custom properties directly via var(--primary) / var(--accent). */
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --primary: var(--color-primary);
+  --primary-light: var(--color-primary-light);
+  --accent: var(--color-accent);
+  --accent-light: var(--color-accent-light);
+  --muted: var(--color-muted);
+  --border: var(--color-border);
 }
 
-body{
+html {
+  scroll-behavior: smooth;
+}
+
+body {
   min-height: 100vh;
   background-image: linear-gradient(rgba(11, 31, 58, 0.72), rgba(11, 31, 58, 0.72)), url('/dha-multan-gate.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  color:var(--foreground);
+  color: var(--foreground);
 }
 
 .gradient-text {
-  background: linear-gradient(90deg, #102a43, #f97316);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  background-clip: text;
   -webkit-background-clip: text;
+  color: transparent;
   -webkit-text-fill-color: transparent;
 }
 
 .hero-bg {
   background:
-    radial-gradient(circle at top left, rgba(249,115,22,0.15), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(30,58,95,0.12), transparent 35%);
+    radial-gradient(circle at top left, rgba(249, 115, 22, 0.15), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(30, 58, 95, 0.12), transparent 35%);
 }
 
 .feature-card {
@@ -46,4 +97,38 @@ body{
 
 .feature-card:hover {
   transform: translateY(-10px);
+}
+
+/* Visible keyboard-focus ring, consistent with the accent token. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/*
+ * Pure-CSS entrance animation for page/section mount — used instead
+ * of a framer-motion wrapper on dashboard/admin pages so those routes
+ * don't pay for framer-motion's JS just to fade content in once.
+ * Pass a stagger via the `--fade-delay` custom property.
+ */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.45s ease-out both;
+  animation-delay: var(--fade-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up {
+    animation: none;
+  }
 }

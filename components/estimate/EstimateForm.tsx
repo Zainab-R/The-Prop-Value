@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import {
   estimateSchema,
   EstimateInput,
@@ -11,52 +11,24 @@ import {
 
 import ToggleSwitch from "./ToggleSwitch";
 import AmenitiesCheckbox from "./AmenitiesCheckbox";
-
-const sectors = [
-  "A",
-  "B1",
-  "C",
-  "D",
-  "E1",
-  "E2",
-  "F",
-  "G",
-  "H",
-  "I",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W1",
-  "W2",
-  "X",
-  "Y",
-];
-
-const amenitiesList = [
-  "Solar System",
-  "Garage",
-  "Swimming Pool",
-  "Basement",
-  "Servant Quarter",
-  "Lawn",
-  "Smart Home",
-  "CCTV",
-];
+import {
+  sectors,
+  propertyTypes,
+  luxuryLevels,
+  amenitiesList,
+  isPropertyType,
+  getSectorsForPropertyType,
+  getSizesForSectorAndType,
+  getVillaTypesForPropertyType,
+  getSizesForVillaType,
+} from "@/lib/propertyOptions";
 
 export default function EstimateForm() {
   const {
     register,
     control,
     watch,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<EstimateInput>({
@@ -72,47 +44,67 @@ export default function EstimateForm() {
   });
 
   const propertyType = watch("propertyType");
+  const sector = watch("sector");
+  const villaType = watch("villaType");
+
+  const villaTypesForType = useMemo(() => {
+    if (!propertyType || !isPropertyType(propertyType)) {
+      return [];
+    }
+
+    return getVillaTypesForPropertyType(propertyType);
+  }, [propertyType]);
+
+  const isSectorC = sector === "C";
+
+  const availableSectors = useMemo(() => {
+    if (!propertyType || !isPropertyType(propertyType)) {
+      return [];
+    }
+
+    const base = getSectorsForPropertyType(propertyType);
+
+    // Sector C has no plain residential/commercial category of its
+    // own — it's only reachable when this property type has at least
+    // one named housing society (ATC Villas, DHA Villas, etc.).
+    if (villaTypesForType.length > 0) {
+      return sectors.filter((s) => base.includes(s) || s === "C");
+    }
+
+    return base;
+  }, [propertyType, villaTypesForType]);
 
   const propertySizes = useMemo(() => {
-    switch (propertyType) {
-      case "Residential Plot":
-        return [
-          "5 Marla",
-          "8 Marla",
-          "10 Marla",
-          "1 Kanal",
-          "2 Kanal",
-          "4 Kanal",
-        ];
-
-      case "House":
-        return [
-          "5 Marla",
-          "8 Marla",
-          "10 Marla",
-          "1 Kanal",
-          "2 Kanal",
-        ];
-
-      case "Commercial Plot":
-        return [
-          "2 Marla",
-          "4 Marla",
-          "8 Marla",
-        ];
-
-      case "Shop":
-        return [
-          "2 Marla",
-          "4 Marla",
-          "8 Marla",
-        ];
-
-      default:
-        return [];
+    if (!propertyType || !isPropertyType(propertyType) || !sector) {
+      return [];
     }
-  }, [propertyType]);
-  const router = useRouter();
+
+    if (isSectorC) {
+      return villaType ? getSizesForVillaType(villaType, propertyType) : [];
+    }
+
+    return getSizesForSectorAndType(propertyType, sector);
+  }, [propertyType, sector, isSectorC, villaType]);
+
+  // Clear the sector if it's no longer valid for the newly selected
+  // property type (e.g. Sector C has no residential category).
+  useEffect(() => {
+    if (sector && !availableSectors.includes(sector)) {
+      setValue("sector", "");
+    }
+  }, [availableSectors, sector, setValue]);
+
+  // Clear the housing society whenever we leave Sector C.
+  useEffect(() => {
+    if (!isSectorC) {
+      setValue("villaType", "");
+    }
+  }, [isSectorC, setValue]);
+
+  // Clear the size whenever the set of valid sizes changes underneath it.
+  useEffect(() => {
+    setValue("propertySize", "");
+  }, [propertyType, sector, villaType, setValue]);
 
   async function onSubmit(data: EstimateInput) {
   try {
@@ -133,6 +125,11 @@ export default function EstimateForm() {
     window.location.href = `/dashboard/result?id=${result.estimate.id}`;
   } catch (error) {
     console.error(error);
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Something went wrong while calculating your estimate."
+    );
   }
 }
 
@@ -144,31 +141,22 @@ export default function EstimateForm() {
       {/* Property Type */}
 
       <div>
-        <label className="mb-2 block font-medium text-slate-700">
+        <label htmlFor="propertyType" className="mb-2 block font-medium text-slate-700">
           Property Type
         </label>
 
         <select
+          id="propertyType"
           {...register("propertyType")}
           className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500"
         >
           <option value="">Select Property Type</option>
 
-          <option value="Residential Plot">
-            Residential Plot
-          </option>
-
-          <option value="Commercial Plot">
-            Commercial Plot
-          </option>
-
-          <option value="House">
-            House
-          </option>
-
-          <option value="Shop">
-            Shop
-          </option>
+          {propertyTypes.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
         </select>
 
         {errors.propertyType && (
@@ -181,25 +169,35 @@ export default function EstimateForm() {
       {/* Sector */}
 
       <div>
-        <label className="mb-2 block font-medium text-slate-700">
+        <label htmlFor="sector" className="mb-2 block font-medium text-slate-700">
           Sector
         </label>
 
         <select
+          id="sector"
           {...register("sector")}
-          className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500"
+          disabled={!propertyType}
+          className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
         >
-          <option value="">Select Sector</option>
+          <option value="">
+            {propertyType ? "Select Sector" : "Select Property Type First"}
+          </option>
 
-          {sectors.map((sector) => (
+          {availableSectors.map((sector) => (
             <option
               key={sector}
               value={sector}
             >
-              {sector}
+              Sector {sector}
             </option>
           ))}
         </select>
+
+        {propertyType && availableSectors.length === 0 && (
+          <p className="mt-1 text-sm text-slate-500">
+            No sectors currently offer this property type.
+          </p>
+        )}
 
         {errors.sector && (
           <p className="mt-1 text-sm text-red-500">
@@ -208,19 +206,64 @@ export default function EstimateForm() {
         )}
       </div>
 
+      {/* Housing Society (Sector C only) */}
+
+      {isSectorC && villaTypesForType.length > 0 && (
+        <div>
+          <label htmlFor="villaType" className="mb-2 block font-medium text-slate-700">
+            Housing Society
+          </label>
+
+          <select
+            id="villaType"
+            {...register("villaType")}
+            className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500"
+          >
+            <option value="">Select Housing Society</option>
+
+            {villaTypesForType.map((vt) => (
+              <option key={vt} value={vt}>
+                {vt}
+              </option>
+            ))}
+          </select>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Sector C has no standalone {propertyType.toLowerCase()} category
+            — its inventory is entirely through these housing societies.
+          </p>
+        </div>
+      )}
+
+      {isSectorC && villaTypesForType.length === 0 && (
+        <p className="text-sm text-slate-500">
+          No housing society in Sector C currently offers {propertyType.toLowerCase()}.
+        </p>
+      )}
+
       {/* Property Size */}
 
       <div>
-        <label className="mb-2 block font-medium text-slate-700">
+        <label htmlFor="propertySize" className="mb-2 block font-medium text-slate-700">
           Property Size
         </label>
 
         <select
+          id="propertySize"
           {...register("propertySize")}
-          className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500"
+          disabled={!sector || (isSectorC && !villaType)}
+          className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
         >
           <option value="">
-            Select Property Size
+            {!propertyType
+              ? "Select Property Type First"
+              : !sector
+              ? "Select Sector First"
+              : isSectorC && !villaType
+              ? "Select Housing Society First"
+              : propertySizes.length === 0
+              ? "No sizes available"
+              : "Select Property Size"}
           </option>
 
           {propertySizes.map((size) => (
@@ -245,11 +288,12 @@ export default function EstimateForm() {
 
       {propertyType === "House" && (
         <div>
-          <label className="mb-2 block font-medium text-slate-700">
+          <label htmlFor="constructionStatus" className="mb-2 block font-medium text-slate-700">
             Construction Status
           </label>
 
           <select
+            id="constructionStatus"
             {...register("constructionStatus")}
             className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500"
           >
@@ -313,11 +357,12 @@ export default function EstimateForm() {
         <>
           <div className="grid gap-6 md:grid-cols-2">
             <div>
-              <label className="mb-2 block font-medium text-slate-700">
+              <label htmlFor="bedrooms" className="mb-2 block font-medium text-slate-700">
                 Bedrooms
               </label>
 
               <input
+                id="bedrooms"
                 type="number"
                 min={1}
                 {...register("bedrooms")}
@@ -332,11 +377,12 @@ export default function EstimateForm() {
             </div>
 
             <div>
-              <label className="mb-2 block font-medium text-slate-700">
+              <label htmlFor="bathrooms" className="mb-2 block font-medium text-slate-700">
                 Bathrooms
               </label>
 
               <input
+                id="bathrooms"
                 type="number"
                 min={1}
                 {...register("bathrooms")}
@@ -364,11 +410,12 @@ export default function EstimateForm() {
           />
 
           <div>
-            <label className="mb-2 block font-medium text-slate-700">
+            <label htmlFor="luxuryLevel" className="mb-2 block font-medium text-slate-700">
               Luxury Level
             </label>
 
             <select
+              id="luxuryLevel"
               {...register("luxuryLevel")}
               className="w-full rounded-xl border border-slate-300 p-4 outline-none focus:border-orange-500"
             >
@@ -376,17 +423,11 @@ export default function EstimateForm() {
                 Select Luxury Level
               </option>
 
-              <option value="Standard">
-                Standard
-              </option>
-
-              <option value="Premium">
-                Premium
-              </option>
-
-              <option value="Luxury">
-                Luxury
-              </option>
+              {luxuryLevels.map((level) => (
+                <option key={level} value={level}>
+                  {level}
+                </option>
+              ))}
             </select>
           </div>
         </>
@@ -436,7 +477,7 @@ export default function EstimateForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-xl bg-orange-500 px-8 py-4 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-orange-500 px-8 py-4 font-semibold text-white transition-all duration-200 hover:bg-orange-600 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
         >
           {isSubmitting
             ? "Calculating..."

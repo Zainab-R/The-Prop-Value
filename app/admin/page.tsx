@@ -1,12 +1,23 @@
 import { prisma } from "@/lib/prisma";
+import dynamic from "next/dynamic";
 import DashboardCard from "@/components/admin/DashboardCard";
 import RecentEstimatesTable from "@/components/admin/RecentEstimatesTable";
-import AdminLogoutButton from "@/components/admin/AdminLogoutButton";
-import EstimatesChart from "@/components/admin/charts/EstimatesChart";
-import PropertyTypeChart from "@/components/admin/charts/PropertyTypeChart";
-import SectorChart from "@/components/admin/charts/SectorChart";
+import ChartSkeleton from "@/components/shared/ChartSkeleton";
+import FadeInUp from "@/components/shared/FadeInUp";
 
 import Link from "next/link";
+
+// Chart libraries are heavy — load them in their own chunk instead of
+// bundling recharts into every admin page's initial JS.
+const EstimatesChart = dynamic(() => import("@/components/admin/charts/EstimatesChart"), {
+  loading: () => <ChartSkeleton />,
+});
+const PropertyTypeChart = dynamic(() => import("@/components/admin/charts/PropertyTypeChart"), {
+  loading: () => <ChartSkeleton />,
+});
+const SectorChart = dynamic(() => import("@/components/admin/charts/SectorChart"), {
+  loading: () => <ChartSkeleton />,
+});
 
 import {
   Users,
@@ -16,7 +27,6 @@ import {
   Map,
   Trees,
   ArrowRight,
-  LogOut,
   TrendingUp,
   Activity,
   UserPlus,
@@ -37,7 +47,7 @@ export default async function AdminDashboard() {
 
     sectorData,
 
-    estimateDates,
+    monthlyRows,
 
     recentEstimates,
 
@@ -84,18 +94,26 @@ export default async function AdminDashboard() {
       take: 5,
     }),
 
-    prisma.estimate.findMany({
-      select: {
-        createdAt: true,
-      },
-    }),
+    prisma.$queryRaw<{ month: Date; count: bigint }[]>`
+      SELECT date_trunc('month', "createdAt") AS month, COUNT(*)::bigint AS count
+      FROM "Estimate"
+      GROUP BY 1
+      ORDER BY 1 DESC
+      LIMIT 12
+    `,
 
     prisma.estimate.findMany({
       take: 5,
       orderBy: {
         createdAt: "desc",
       },
-      include: {
+      select: {
+        id: true,
+        sector: true,
+        propertyType: true,
+        propertySize: true,
+        estimatedMax: true,
+        createdAt: true,
         user: {
           select: {
             name: true,
@@ -125,49 +143,39 @@ export default async function AdminDashboard() {
     }),
   ]);
 
-  const monthlyMap: Record<string, number> = {};
+  const monthlyData = [...monthlyRows]
+    .sort((a, b) => a.month.getTime() - b.month.getTime())
+    .map((row) => ({
+      month: row.month.toLocaleString("default", {
+        month: "short",
+        year: "numeric",
+      }),
+      estimates: Number(row.count),
+    }));
 
-  estimateDates.forEach((estimate) => {
-    const month = estimate.createdAt.toLocaleString("default", {
-      month: "short",
-    });
-
-    monthlyMap[month] = (monthlyMap[month] || 0) + 1;
-  });
-
-  const monthlyData = Object.entries(monthlyMap).map(
-    ([month, estimates]) => ({
-      month,
-      estimates,
-    })
-  );
-
-  const propertySummary = propertyTypeData
-    .map((item) => ({
-      type: item.propertyType,
-      count: item._count.propertyType,
-    }))
-    .sort((a, b) => b.count - a.count);
+  const formattedRecentEstimates = recentEstimates.map((estimate) => ({
+    ...estimate,
+    estimatedMax: Number(estimate.estimatedMax),
+  }));
 
       return (
     <div>
 
       {/* Header */}
 
+      <FadeInUp>
       <div className="mb-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
 
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-        <h1 className="text-4xl font-bold text-[#123A6D]">
+        <h1 className="text-4xl font-bold text-primary">
         Admin Dashboard
         </h1>
 
         <p className="mt-2 text-slate-500">
-        Welcome back! Here's an overview of your platform.
+        Welcome back! Here&apos;s an overview of your platform.
         </p>
         </div>
-
-        <AdminLogoutButton />
         </div>
 
         <div className="rounded-2xl border border-orange-100 bg-orange-50 px-6 py-4">
@@ -186,9 +194,11 @@ export default async function AdminDashboard() {
         </div>
 
       </div>
+      </FadeInUp>
 
       {/* Statistics Cards */}
 
+      <FadeInUp delay={0.05}>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 
         <DashboardCard
@@ -234,12 +244,14 @@ export default async function AdminDashboard() {
         />
 
       </div>
+      </FadeInUp>
 
       {/* Quick Actions */}
 
+      <FadeInUp delay={0.1}>
       <div className="mt-12">
 
-        <h2 className="mb-6 text-2xl font-bold text-[#123A6D]">
+        <h2 className="mb-6 text-2xl font-bold text-primary">
           Quick Actions
         </h2>
 
@@ -247,7 +259,7 @@ export default async function AdminDashboard() {
 
           <Link
             href="/admin/market-rates"
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]"
           >
             <Building2 className="mb-4 h-10 w-10 text-emerald-600" />
 
@@ -259,7 +271,7 @@ export default async function AdminDashboard() {
               Add, edit or remove market rates.
             </p>
 
-            <div className="mt-5 flex items-center font-semibold text-[#123A6D]">
+            <div className="mt-5 flex items-center font-semibold text-primary">
               Manage
               <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
             </div>
@@ -267,7 +279,7 @@ export default async function AdminDashboard() {
 
           <Link
             href="/admin/users"
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]"
           >
             <Users className="mb-4 h-10 w-10 text-blue-600" />
 
@@ -279,7 +291,7 @@ export default async function AdminDashboard() {
               View and manage registered users.
             </p>
 
-            <div className="mt-5 flex items-center font-semibold text-[#123A6D]">
+            <div className="mt-5 flex items-center font-semibold text-primary">
               Open
               <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
             </div>
@@ -287,7 +299,7 @@ export default async function AdminDashboard() {
 
           <Link
             href="/admin/luxury-rates"
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]"
           >
             <Gem className="mb-4 h-10 w-10 text-purple-600" />
 
@@ -299,7 +311,7 @@ export default async function AdminDashboard() {
               Configure luxury multipliers.
             </p>
 
-            <div className="mt-5 flex items-center font-semibold text-[#123A6D]">
+            <div className="mt-5 flex items-center font-semibold text-primary">
               Manage
               <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
             </div>
@@ -307,7 +319,7 @@ export default async function AdminDashboard() {
 
           <Link
             href="/admin/amenities"
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]"
           >
             <Trees className="mb-4 h-10 w-10 text-green-600" />
 
@@ -319,7 +331,7 @@ export default async function AdminDashboard() {
               Update amenity values.
             </p>
 
-            <div className="mt-5 flex items-center font-semibold text-[#123A6D]">
+            <div className="mt-5 flex items-center font-semibold text-primary">
               Open
               <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
             </div>
@@ -328,11 +340,13 @@ export default async function AdminDashboard() {
         </div>
 
       </div>
+      </FadeInUp>
 
             {/* Analytics */}
 
+      <FadeInUp delay={0.15}>
       <div className="mt-12">
-        <h2 className="mb-6 text-2xl font-bold text-[#123A6D]">
+        <h2 className="mb-6 text-2xl font-bold text-primary">
           Analytics
         </h2>
 
@@ -354,12 +368,14 @@ export default async function AdminDashboard() {
 
         </div>
       </div>
+      </FadeInUp>
 
       {/* Platform Overview */}
 
+      <FadeInUp delay={0.2}>
       <div className="mt-12">
 
-        <h2 className="mb-6 text-2xl font-bold text-[#123A6D]">
+        <h2 className="mb-6 text-2xl font-bold text-primary">
           Platform Overview
         </h2>
 
@@ -373,7 +389,7 @@ export default async function AdminDashboard() {
               <TrendingUp className="h-10 w-10 rounded-xl bg-orange-100 p-2 text-orange-500" />
 
               <div>
-                <h3 className="text-lg font-semibold text-[#123A6D]">
+                <h3 className="text-lg font-semibold text-primary">
                   Most Popular Sector
                 </h3>
 
@@ -403,7 +419,7 @@ export default async function AdminDashboard() {
               <UserPlus className="h-10 w-10 rounded-xl bg-blue-100 p-2 text-blue-600" />
 
               <div>
-                <h3 className="text-lg font-semibold text-[#123A6D]">
+                <h3 className="text-lg font-semibold text-primary">
                   Latest Registration
                 </h3>
 
@@ -413,7 +429,7 @@ export default async function AdminDashboard() {
               </div>
             </div>
 
-            <h2 className="truncate text-xl font-bold text-[#123A6D]">
+            <h2 className="truncate text-xl font-bold text-primary">
               {latestUser?.name || "Unnamed User"}
             </h2>
 
@@ -437,7 +453,7 @@ export default async function AdminDashboard() {
               <Activity className="h-10 w-10 rounded-xl bg-green-100 p-2 text-green-600" />
 
               <div>
-                <h3 className="text-lg font-semibold text-[#123A6D]">
+                <h3 className="text-lg font-semibold text-primary">
                   Platform Status
                 </h3>
 
@@ -460,12 +476,14 @@ export default async function AdminDashboard() {
         </div>
 
       </div>
+      </FadeInUp>
 
             {/* Recent Activity */}
 
+      <FadeInUp delay={0.25}>
       <div className="mt-12">
 
-        <h2 className="mb-6 text-2xl font-bold text-[#123A6D]">
+        <h2 className="mb-6 text-2xl font-bold text-primary">
           Recent Activity
         </h2>
 
@@ -477,7 +495,7 @@ export default async function AdminDashboard() {
 
             <div className="mb-5 flex items-center justify-between">
 
-              <h3 className="text-xl font-bold text-[#123A6D]">
+              <h3 className="text-xl font-bold text-primary">
                 Recent Users
               </h3>
 
@@ -523,7 +541,7 @@ export default async function AdminDashboard() {
           <div className="xl:col-span-2">
 
             <RecentEstimatesTable
-              estimates={recentEstimates}
+              estimates={formattedRecentEstimates}
             />
 
           </div>
@@ -531,62 +549,7 @@ export default async function AdminDashboard() {
         </div>
 
       </div>
-
-      {/* Dashboard Summary */}
-
-      <div className="mt-12 rounded-2xl bg-gradient-to-r from-[#123A6D] to-[#1E5DA8] p-8 text-white shadow-lg">
-
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-
-          <div>
-            <p className="text-sm text-blue-100">
-              Registered Users
-            </p>
-
-            <h2 className="mt-2 text-3xl font-bold">
-              {totalUsers}
-            </h2>
-          </div>
-
-          <div>
-            <p className="text-sm text-blue-100">
-              Property Estimates
-            </p>
-
-            <h2 className="mt-2 text-3xl font-bold">
-              {totalEstimates}
-            </h2>
-          </div>
-
-          <div>
-            <p className="text-sm text-blue-100">
-              Property Types
-            </p>
-
-            <h2 className="mt-2 text-3xl font-bold">
-              {propertySummary.length}
-            </h2>
-          </div>
-
-          <div>
-            <p className="text-sm text-blue-100">
-              Top Sector
-            </p>
-
-            <h2 className="mt-2 text-3xl font-bold">
-              {topSector.length ? topSector[0].sector : "-"}
-            </h2>
-          </div>
-
-        </div>
-
-        <div className="mt-8 border-t border-white/20 pt-5 text-sm text-blue-100">
-
-          © {new Date().getFullYear()} The Prop Value — Admin Dashboard
-
-        </div>
-
-      </div>
+      </FadeInUp>
 
     </div>
   );

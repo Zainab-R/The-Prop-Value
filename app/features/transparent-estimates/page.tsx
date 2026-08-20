@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FeaturePage from "@/components/FeaturePage";
 import {
   ShieldCheck,
@@ -5,6 +6,12 @@ import {
   Calculator,
   Eye,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Transparent Estimates | Prop Value",
+  description:
+    "Understand every property valuation with clear pricing explanations, detailed calculations, and complete transparency. Every estimate is backed by data-driven insights to help you make informed decisions.",
+};
 
 export default function TransparentEstimatesPage() {
   return (

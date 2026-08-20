@@ -2,11 +2,14 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth/guards";
 
 export async function createRoadRate(
   roadType: string,
   multiplier: number
 ) {
+  await requireAdmin();
+
   const name = roadType.trim();
 
   if (!name) {
@@ -46,6 +49,8 @@ export async function updateRoadRate(
   roadType: string,
   multiplier: number
 ) {
+  await requireAdmin();
+
   const name = roadType.trim();
 
   if (!id || !id.trim()) {
@@ -91,6 +96,8 @@ export async function updateRoadRate(
 }
 
 export async function deleteRoadRate(id: string) {
+  await requireAdmin();
+
   if (!id || !id.trim()) {
     throw new Error("Road rate ID is required.");
   }

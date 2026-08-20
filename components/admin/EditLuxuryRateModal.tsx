@@ -23,7 +23,6 @@ export default function EditLuxuryRateModal({
   onClose,
   rate,
 }: Props) {
-    if (!open || !rate) return null;
   const router = useRouter();
 
   const [level, setLevel] = useState("");
@@ -70,7 +69,7 @@ export default function EditLuxuryRateModal({
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
 
         <div className="flex items-center justify-between border-b p-5">
-          <h2 className="text-xl font-semibold text-[#123A6D]">
+          <h2 className="text-xl font-semibold text-primary">
             Edit Luxury Rate
           </h2>
 
@@ -127,7 +126,7 @@ export default function EditLuxuryRateModal({
           <button
             disabled={pending}
             onClick={handleUpdate}
-            className="rounded-xl bg-[#123A6D] px-5 py-2 text-white disabled:opacity-50"
+            className="rounded-xl bg-primary px-5 py-2 text-white disabled:opacity-50"
           >
             {pending ? "Updating..." : "Update"}
           </button>

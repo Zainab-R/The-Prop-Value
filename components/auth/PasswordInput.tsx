@@ -2,18 +2,19 @@
 
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
-interface Props {
-  register: any;
-  name: string;
+interface Props<TFieldValues extends FieldValues> {
+  register: UseFormRegister<TFieldValues>;
+  name: Path<TFieldValues>;
   placeholder: string;
 }
 
-export default function PasswordInput({
+export default function PasswordInput<TFieldValues extends FieldValues>({
   register,
   name,
   placeholder,
-}: Props) {
+}: Props<TFieldValues>) {
   const [show, setShow] = useState(false);
 
   return (

@@ -1,10 +1,12 @@
 import EstimateForm from "@/components/estimate/EstimateForm";
+import FadeInUp from "@/components/shared/FadeInUp";
 
 export default function EstimatePage() {
   return (
+    <FadeInUp>
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-[#102A43]">
+        <h1 className="text-3xl font-bold text-primary">
           Property Valuation
         </h1>
 
@@ -15,5 +17,6 @@ export default function EstimatePage() {
 
       <EstimateForm />
     </div>
+    </FadeInUp>
   );
 }

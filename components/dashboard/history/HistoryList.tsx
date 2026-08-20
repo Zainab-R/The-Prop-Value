@@ -35,7 +35,7 @@ export default function HistoryList({
   const filteredEstimates = useMemo(() => {
     const query = search.toLowerCase();
 
-    let data = estimates.filter((estimate) => {
+    const data = estimates.filter((estimate) => {
       const matchesSearch =
         estimate.sector.toLowerCase().includes(query) ||
         estimate.propertyType.toLowerCase().includes(query) ||

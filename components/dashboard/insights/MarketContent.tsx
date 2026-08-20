@@ -1,12 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 
 import MarketFilters from "./MarketFilters";
 import MarketOverview from "./MarketOverview";
 import MarketTable from "./MarketTable";
-import SectorTrends from "./SectorTrends";
 import TopSectors from "./TopSectors";
+import ChartSkeleton from "@/components/shared/ChartSkeleton";
+
+const SectorTrends = dynamic(() => import("./SectorTrends"), {
+  loading: () => <ChartSkeleton height={280} />,
+  ssr: false,
+});
 
 interface Rate {
   id: string;

@@ -2,9 +2,14 @@
 import DifferenceCards from "./DifferenceCards";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import ComparisonTable from "./ComparisonTable";
+import ChartSkeleton from "@/components/shared/ChartSkeleton";
 
-import PriceChart from "./PriceChart";
+const PriceChart = dynamic(() => import("./PriceChart"), {
+  loading: () => <ChartSkeleton height={280} />,
+  ssr: false,
+});
 
 interface Estimate {
   id: string;
@@ -36,41 +41,53 @@ export default function CompareSelector({
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2">
-        <select
-          value={firstId}
-          onChange={(e) => setFirstId(e.target.value)}
-          className="rounded-xl border p-3"
-        >
-          <option value="">Select First Property</option>
+        <div>
+          <label htmlFor="compare-first" className="mb-2 block text-sm font-medium text-slate-700">
+            First Property
+          </label>
+          <select
+            id="compare-first"
+            value={firstId}
+            onChange={(e) => setFirstId(e.target.value)}
+            className="w-full rounded-xl border p-3"
+          >
+            <option value="">Select First Property</option>
 
-          {estimates.map((estimate) => (
-            <option
-              key={estimate.id}
-              value={estimate.id}
-            >
-              {estimate.sector} • {estimate.propertyType} •{" "}
-              {estimate.propertySize}
-            </option>
-          ))}
-        </select>
+            {estimates.map((estimate) => (
+              <option
+                key={estimate.id}
+                value={estimate.id}
+              >
+                {estimate.sector} • {estimate.propertyType} •{" "}
+                {estimate.propertySize}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <select
-          value={secondId}
-          onChange={(e) => setSecondId(e.target.value)}
-          className="rounded-xl border p-3"
-        >
-          <option value="">Select Second Property</option>
+        <div>
+          <label htmlFor="compare-second" className="mb-2 block text-sm font-medium text-slate-700">
+            Second Property
+          </label>
+          <select
+            id="compare-second"
+            value={secondId}
+            onChange={(e) => setSecondId(e.target.value)}
+            className="w-full rounded-xl border p-3"
+          >
+            <option value="">Select Second Property</option>
 
-          {estimates.map((estimate) => (
-            <option
-              key={estimate.id}
-              value={estimate.id}
-            >
-              {estimate.sector} • {estimate.propertyType} •{" "}
-              {estimate.propertySize}
-            </option>
-          ))}
-        </select>
+            {estimates.map((estimate) => (
+              <option
+                key={estimate.id}
+                value={estimate.id}
+              >
+                {estimate.sector} • {estimate.propertyType} •{" "}
+                {estimate.propertySize}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
      {firstProperty && secondProperty && (

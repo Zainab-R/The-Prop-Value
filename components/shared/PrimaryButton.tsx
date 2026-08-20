@@ -10,7 +10,7 @@ export default function PrimaryButton({ href, children, className = "" }: Primar
   return (
     <Link
       href={href}
-      className={`rounded-xl bg-orange-500 px-8 py-4 text-lg font-semibold text-white transition hover:bg-orange-600 ${className}`.trim()}
+      className={`inline-flex items-center justify-center rounded-xl bg-accent px-8 py-4 text-lg font-semibold text-accent-foreground transition hover:bg-[#ea580c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${className}`.trim()}
     >
       {children}
     </Link>

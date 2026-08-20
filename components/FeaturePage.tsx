@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
+
 interface Highlight {
   icon: React.ReactNode;
   title: string;
@@ -38,18 +39,18 @@ export default function FeaturePage({
   }}
 >
   {/* Dark Overlay */}
-  <div className="absolute inset-0 bg-[#0B1F3A]/70"></div>
+  <div className="absolute inset-0 bg-primary/70"></div>
 
   <div className="relative mx-auto max-w-7xl px-6 py-24">
 
     <div className="flex items-center gap-6">
 
-      <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-orange-500 text-white shadow-xl">
+      <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-accent text-accent-foreground shadow-xl">
         {heroIcon}
       </div>
 
       <div>
-        <h1 className="text-5xl font-bold">
+        <h1 className="font-heading text-5xl font-bold tracking-tight">
           {title}
         </h1>
 
@@ -60,7 +61,7 @@ export default function FeaturePage({
         <div className="mt-10">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-4 font-semibold transition hover:bg-white hover:text-[#0B1F3A]"
+            className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-4 font-semibold transition hover:bg-white hover:text-primary"
           >
             <ArrowLeft size={18} />
             Back Home
@@ -73,6 +74,39 @@ export default function FeaturePage({
 
   </div>
 </section>
+
+      {/* Highlights */}
+
+      {highlights.length > 0 && (
+        <section className="bg-white py-20">
+          <div className="mx-auto max-w-6xl px-6">
+            <h2 className="mb-12 text-center text-4xl font-bold text-slate-900">
+              What You Get
+            </h2>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {highlights.map((item) => (
+                <div
+                  key={item.title}
+                  className="feature-card rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm"
+                >
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+                    {item.icon}
+                  </div>
+
+                  <h3 className="font-semibold text-slate-900">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-2 text-sm text-slate-500">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Benefits */}
 
@@ -113,7 +147,7 @@ export default function FeaturePage({
 
       {/* CTA */}
 
-       <section className="bg-[#0B1F3A] text-white">
+       <section className="bg-primary text-white">
 
 
         <div className="mx-auto max-w-6xl px-6 py-24 text-center">
@@ -127,7 +161,13 @@ export default function FeaturePage({
             location factors, and construction insights.
           </p>
 
-         
+          <Link
+            href="/register"
+            className="mt-10 inline-flex items-center gap-2 rounded-xl bg-accent px-8 py-4 font-semibold text-accent-foreground shadow-lg transition hover:-translate-y-1 hover:bg-[#ea580c]"
+          >
+            Get Started
+            <ArrowRight size={18} />
+          </Link>
 
         </div>
 

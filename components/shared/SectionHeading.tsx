@@ -1,27 +1,23 @@
-interface Props{
-    title:string
-    subtitle:string
+interface Props {
+  title: string;
+  subtitle: string;
+  className?: string;
 }
 
 export default function SectionHeading({
-    title,
-    subtitle,
-}:Props){
+  title,
+  subtitle,
+  className = "",
+}: Props) {
+  return (
+    <div className={`mx-auto mb-16 max-w-3xl text-center ${className}`.trim()}>
+      <h2 className="font-heading text-4xl font-bold tracking-tight text-primary lg:text-5xl">
+        {title}
+      </h2>
 
-    return(
-
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-
-            <h2 className="text-4xl font-bold lg:text-5xl">
-                {title}
-            </h2>
-
-            <p className="mt-5 text-lg text-slate-600">
-                {subtitle}
-            </p>
-
-        </div>
-
-    )
-
+      <p className="mt-5 text-lg text-slate-600">
+        {subtitle}
+      </p>
+    </div>
+  );
 }

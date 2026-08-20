@@ -13,6 +13,8 @@ import {
 
 import EditMarketRateModal from "./EditMarketRateModal";
 import AddMarketRateModal from "./AddMarketRateModal";
+import DeleteDialog from "./DeleteDialog";
+import RowActionsMenu from "@/components/shared/RowActionsMenu";
 
 interface Rate {
   id: string;
@@ -21,6 +23,7 @@ interface Rate {
   propertySize: string;
   basePrice: number;
   updatedAt: Date;
+  villaType?: string | null;
 }
 
 interface Props {
@@ -33,7 +36,28 @@ export default function MarketRatesTable({
   const [search, setSearch] = useState("");
   const [editingRate, setEditingRate] = useState<Rate | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Rate | null>(null);
   const router = useRouter();
+
+  function handleDelete() {
+    if (!deleteTarget) return;
+
+    const id = deleteTarget.id;
+    setDeleteTarget(null);
+
+    (async () => {
+      try {
+        await deleteMarketRate(id);
+        toast.success("Market rate deleted successfully!");
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        toast.error(
+          error instanceof Error ? error.message : "Failed to delete market rate."
+        );
+      }
+    })();
+  }
 
   const filteredRates = useMemo(() => {
     return rates.filter((rate) =>
@@ -52,12 +76,12 @@ export default function MarketRatesTable({
           placeholder="Search market rates..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-80 rounded-xl border border-slate-300 px-4 py-3 focus:border-[#123A6D] focus:outline-none"
+          className="w-80 rounded-xl border border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
         />
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 rounded-xl bg-[#123A6D] px-5 py-3 text-white transition hover:bg-[#F97316]"
+          className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-white transition hover:bg-[#F97316]"
         >
           <Plus size={18} />
           Add Market Rate
@@ -69,9 +93,10 @@ export default function MarketRatesTable({
 
         <table className="w-full">
 
-          <thead className="bg-[#123A6D] text-white">
+          <thead className="bg-primary text-white">
             <tr>
               <th className="px-6 py-4 text-left">Sector</th>
+              <th className="px-6 py-4 text-left">Housing Society</th>
               <th className="px-6 py-4 text-left">Property Type</th>
               <th className="px-6 py-4 text-left">Size</th>
               <th className="px-6 py-4 text-left">Price</th>
@@ -93,6 +118,10 @@ export default function MarketRatesTable({
                   {rate.sector}
                 </td>
 
+                <td className="px-6 py-4 text-slate-500">
+                  {rate.villaType || "-"}
+                </td>
+
                 <td className="px-6 py-4">
                   {rate.propertyType}
                 </td>
@@ -101,7 +130,7 @@ export default function MarketRatesTable({
                   {rate.propertySize}
                 </td>
 
-                <td className="px-6 py-4 font-semibold text-[#123A6D]">
+                <td className="px-6 py-4 font-semibold text-primary">
                   Rs. {rate.basePrice.toLocaleString()}
                 </td>
 
@@ -109,42 +138,23 @@ export default function MarketRatesTable({
                   {new Date(rate.updatedAt).toLocaleDateString()}
                 </td>
 
-                <td className="px-6 py-4">
-
-                  <div className="flex justify-center gap-3">
-
-                    <button
-                      onClick={() => setEditingRate(rate)}
-                      className="rounded-lg border border-[#123A6D] p-2 text-[#123A6D] transition hover:bg-[#123A6D] hover:text-white"
-                    >
-                      <Pencil size={18} />
-                    </button>
-
-                    <button
-                      onClick={async () => {
-                        const confirmed = window.confirm(
-                          "Are you sure you want to delete this market rate?"
-                        );
-
-                        if (!confirmed) return;
-
-                        try {
-                          await deleteMarketRate(rate.id);
-
-                          toast.success("Market rate deleted successfully!");
-                          router.refresh();           
-                        } catch (error) {
-                          console.error(error);
-                          toast.error("Failed to delete market rate.");
-                        }
-                      }}
-                      className="rounded-lg border border-red-500 p-2 text-red-500 transition hover:bg-red-500 hover:text-white"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-
-                  </div>
-
+                <td className="px-6 py-4 text-center">
+                  <RowActionsMenu
+                    ariaLabel="Market rate actions"
+                    actions={[
+                      {
+                        label: "Edit",
+                        icon: Pencil,
+                        onClick: () => setEditingRate(rate),
+                      },
+                      {
+                        label: "Delete",
+                        icon: Trash2,
+                        variant: "destructive",
+                        onClick: () => setDeleteTarget(rate),
+                      },
+                    ]}
+                  />
                 </td>
 
               </tr>
@@ -195,9 +205,21 @@ export default function MarketRatesTable({
 
             toast.error("Failed to update market rate.");
             }
-          }} 
+          }}
         />
       )}
+
+      <DeleteDialog
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete market rate"
+        description={
+          deleteTarget
+            ? `Are you sure you want to delete the rate for ${deleteTarget.propertyType} (${deleteTarget.propertySize}) in Sector ${deleteTarget.sector}? This action cannot be undone.`
+            : undefined
+        }
+      />
 
     </div>
   );

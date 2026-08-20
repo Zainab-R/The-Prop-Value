@@ -8,7 +8,7 @@ export default function CallToAction() {
   return (
     <section className="relative overflow-hidden py-28">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#102A43] via-[#163B63] to-[#102A43]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary via-[#163B63] to-primary" />
 
       {/* Orange Glow */}
       <div className="absolute -left-24 top-0 h-72 w-72 rounded-full bg-orange-500/20 blur-3xl" />

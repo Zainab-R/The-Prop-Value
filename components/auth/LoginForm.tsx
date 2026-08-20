@@ -61,8 +61,8 @@ export default function LoginForm() {
   async function handleGoogleLogin() {
     setGoogleLoading(true);
 
-    const result = await signIn("google", {
-    callbackUrl: "/auth/redirect",
+    await signIn("google", {
+    callbackUrl: "/admin/redirect",
     });
   }
 
@@ -136,7 +136,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-orange-500 py-4 font-semibold text-white transition hover:bg-orange-600 disabled:opacity-60"
+        className="w-full rounded-xl bg-orange-500 py-4 font-semibold text-white transition-all duration-200 hover:bg-orange-600 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
       >
         {loading ? "Signing In..." : "Login"}
       </button>
@@ -144,9 +144,9 @@ export default function LoginForm() {
       {/* Register Link */}
 
       <div className="text-center text-sm">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link
-          href="/auth/register"
+          href="/register"
           className="font-semibold text-orange-500 hover:underline"
         >
           Register

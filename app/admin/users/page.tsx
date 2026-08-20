@@ -1,30 +1,45 @@
 import { prisma } from "@/lib/prisma";
 import UsersTable from "@/components/admin/UsersTable";
+import UsersToolbar from "@/components/admin/UsersToolbar";
+import Pagination from "@/components/shared/Pagination";
 
-export default async function UsersPage() {
-  const users = await prisma.user.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+const PAGE_SIZE = 15;
 
-  // TEMPORARY DEBUG LOGS
-  console.log("========== USERS FROM DATABASE ==========");
-  console.log("Total Users:", users.length);
+interface PageProps {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}
 
-  console.table(
-    users.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    }))
-  );
+export default async function UsersPage({ searchParams }: PageProps) {
+  const { q, page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, Number(pageParam) || 1);
+
+  const where = q
+    ? {
+        OR: [
+          { name: { contains: q, mode: "insensitive" as const } },
+          { email: { contains: q, mode: "insensitive" as const } },
+        ],
+      }
+    : undefined;
+
+  const [totalCount, users] = await Promise.all([
+    prisma.user.count({ where }),
+    prisma.user.findMany({
+      where,
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: PAGE_SIZE,
+      skip: (currentPage - 1) * PAGE_SIZE,
+    }),
+  ]);
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-[#123A6D]">
+        <h1 className="text-3xl font-bold text-primary">
           Users Management
         </h1>
 
@@ -33,20 +48,16 @@ export default async function UsersPage() {
         </p>
       </div>
 
-      {/* Toolbar */}
-      <div className="flex items-center justify-between">
-        <input
-          type="text"
-          placeholder="Search users..."
-          className="w-80 rounded-xl border border-slate-300 bg-white px-4 py-2 outline-none focus:border-[#123A6D]"
-        />
-
-        <button className="rounded-xl bg-[#123A6D] px-5 py-2 text-white hover:bg-[#0F2E56] transition">
-          + Add User
-        </button>
-      </div>
+      <UsersToolbar />
 
       <UsersTable users={users} />
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        basePath="/admin/users"
+        searchParams={{ q }}
+      />
     </div>
   );
 }

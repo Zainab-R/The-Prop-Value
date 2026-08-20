@@ -6,6 +6,7 @@ import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} ${inter.variable}`}>
         <AuthProvider>
           {children}
 
@@ -32,7 +33,7 @@ export default function RootLayout({
               duration: 3000,
               style: {
                 borderRadius: "12px",
-                background: "#123A6D",
+                background: "var(--color-primary)",
                 color: "#fff",
                 padding: "16px",
               },

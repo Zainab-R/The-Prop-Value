@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { SquarePen, Trash2 } from "lucide-react";
 
 import EditLuxuryRateModal from "@/components/admin/EditLuxuryRateModal";
-import DeleteLuxuryRateDialog from "@/components/admin/DeleteLuxuryRateDialog";
+import DeleteDialog from "@/components/admin/DeleteDialog";
+import RowActionsMenu from "@/components/shared/RowActionsMenu";
 import { deleteLuxuryRate } from "@/app/admin/luxury-rates/actions";
 
 interface LuxuryRate {
@@ -30,19 +32,23 @@ export default function LuxuryRatesTable({
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async () => {
+    if (!selectedRate) return;
+
     try {
       setDeleting(true);
 
-      await deleteLuxuryRate(id);
+      await deleteLuxuryRate(selectedRate.id);
 
+      toast.success("Luxury rate deleted.");
       setDeleteOpen(false);
       setSelectedRate(null);
 
       router.refresh();
     } catch (error) {
-      console.error("Failed to delete luxury rate:", error);
-      alert("Failed to delete luxury rate. Please try again.");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete luxury rate."
+      );
     } finally {
       setDeleting(false);
     }
@@ -100,34 +106,29 @@ export default function LuxuryRatesTable({
                     </span>
                   </td>
 
-                  <td className="px-6 py-5">
-                    <div className="flex justify-end gap-2">
-                      {/* Edit */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedRate(rate);
-                          setEditOpen(true);
-                        }}
-                        className="rounded-lg p-2 text-blue-600 transition hover:bg-blue-100"
-                        title="Edit luxury rate"
-                      >
-                        <SquarePen className="h-5 w-5" />
-                      </button>
-
-                      {/* Delete */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedRate(rate);
-                          setDeleteOpen(true);
-                        }}
-                        className="rounded-lg p-2 text-red-600 transition hover:bg-red-100"
-                        title="Delete luxury rate"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
-                    </div>
+                  <td className="px-6 py-5 text-right">
+                    <RowActionsMenu
+                      ariaLabel="Luxury rate actions"
+                      actions={[
+                        {
+                          label: "Edit",
+                          icon: SquarePen,
+                          onClick: () => {
+                            setSelectedRate(rate);
+                            setEditOpen(true);
+                          },
+                        },
+                        {
+                          label: "Delete",
+                          icon: Trash2,
+                          variant: "destructive",
+                          onClick: () => {
+                            setSelectedRate(rate);
+                            setDeleteOpen(true);
+                          },
+                        },
+                      ]}
+                    />
                   </td>
                 </tr>
               ))}
@@ -147,7 +148,7 @@ export default function LuxuryRatesTable({
       />
 
       {/* Delete Dialog */}
-      <DeleteLuxuryRateDialog
+      <DeleteDialog
         open={deleteOpen}
         onClose={() => {
           if (!deleting) {
@@ -155,8 +156,13 @@ export default function LuxuryRatesTable({
             setSelectedRate(null);
           }
         }}
-        onDelete={handleDelete}
-        rate={selectedRate}
+        onConfirm={handleDelete}
+        title="Delete luxury rate"
+        description={
+          selectedRate
+            ? `Are you sure you want to delete "${selectedRate.level}"? This action cannot be undone.`
+            : undefined
+        }
       />
     </>
   );

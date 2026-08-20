@@ -1,15 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import {
+  getNotificationPreferences,
+  updateNotifications,
+  type NotificationPreferences,
+} from "./updateNotifications";
+
+const defaultPreferences: NotificationPreferences = {
+  notifyEmail: true,
+  notifyEstimate: true,
+  notifyMarket: false,
+};
 
 export default function NotificationSettings() {
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [estimateNotifications, setEstimateNotifications] = useState(true);
-  const [marketUpdates, setMarketUpdates] = useState(false);
+  const [preferences, setPreferences] = useState<NotificationPreferences>(
+    defaultPreferences
+  );
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    alert("Notification preferences will be saved in the next step.");
-  };
+  useEffect(() => {
+    getNotificationPreferences()
+      .then(setPreferences)
+      .catch(() => toast.error("Failed to load notification preferences."))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleSave() {
+    setSaving(true);
+
+    try {
+      await updateNotifications(preferences);
+      toast.success("Notification preferences saved.");
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to save notification preferences."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+        <div className="h-8 w-64 animate-pulse rounded bg-slate-200" />
+        <div className="mt-8 space-y-6">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-6 animate-pulse rounded bg-slate-100" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
@@ -30,9 +77,12 @@ export default function NotificationSettings() {
 
           <input
             type="checkbox"
-            checked={emailNotifications}
+            checked={preferences.notifyEmail}
             onChange={() =>
-              setEmailNotifications(!emailNotifications)
+              setPreferences((prev) => ({
+                ...prev,
+                notifyEmail: !prev.notifyEmail,
+              }))
             }
             className="h-5 w-5 accent-orange-500"
           />
@@ -50,9 +100,12 @@ export default function NotificationSettings() {
 
           <input
             type="checkbox"
-            checked={estimateNotifications}
+            checked={preferences.notifyEstimate}
             onChange={() =>
-              setEstimateNotifications(!estimateNotifications)
+              setPreferences((prev) => ({
+                ...prev,
+                notifyEstimate: !prev.notifyEstimate,
+              }))
             }
             className="h-5 w-5 accent-orange-500"
           />
@@ -70,17 +123,23 @@ export default function NotificationSettings() {
 
           <input
             type="checkbox"
-            checked={marketUpdates}
-            onChange={() => setMarketUpdates(!marketUpdates)}
+            checked={preferences.notifyMarket}
+            onChange={() =>
+              setPreferences((prev) => ({
+                ...prev,
+                notifyMarket: !prev.notifyMarket,
+              }))
+            }
             className="h-5 w-5 accent-orange-500"
           />
         </label>
 
         <button
           onClick={handleSave}
-          className="w-full mt-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 transition"
+          disabled={saving}
+          className="w-full mt-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 transition disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Save Preferences
+          {saving ? "Saving..." : "Save Preferences"}
         </button>
       </div>
     </div>

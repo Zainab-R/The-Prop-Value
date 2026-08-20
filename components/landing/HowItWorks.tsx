@@ -60,7 +60,7 @@ export default function HowItWorks() {
             HOW IT WORKS
           </span>
 
-          <h2 className="mt-6 text-4xl font-bold text-[#102A43] md:text-5xl">
+          <h2 className="mt-6 text-4xl font-bold text-primary md:text-5xl">
             Estimate Property Values
             <br />
             in Three Simple Steps
@@ -76,7 +76,7 @@ export default function HowItWorks() {
         <div className="relative mt-24">
           {/* Connecting Line */}
           <div className="absolute left-0 top-16 hidden h-1 w-full rounded-full bg-slate-200 lg:block">
-            <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-[#102A43] to-orange-500" />
+            <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-primary to-orange-500" />
           </div>
 
           {/* Cards */}
@@ -105,11 +105,11 @@ export default function HowItWorks() {
                   </div>
 
                   {/* Icon */}
-                  <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#102A43] to-[#1E3A5F] shadow-lg">
+                  <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-[#1E3A5F] shadow-lg">
                     <Icon className="h-8 w-8 text-white" />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-[#102A43]">
+                  <h3 className="text-2xl font-bold text-primary">
                     {step.title}
                   </h3>
 
@@ -136,7 +136,7 @@ export default function HowItWorks() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mt-28 overflow-hidden rounded-3xl bg-gradient-to-br from-[#102A43] to-[#1E3A5F] shadow-2xl"
+          className="mt-28 overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-[#1E3A5F] shadow-2xl"
         >
           <div className="grid items-center gap-12 p-10 md:grid-cols-2 lg:p-14">
             {/* Left */}
@@ -183,7 +183,7 @@ export default function HowItWorks() {
             >
               <div className="mb-8 flex items-center justify-between">
                 <div>
-                  <h4 className="text-2xl font-bold text-[#102A43]">
+                  <h4 className="text-2xl font-bold text-primary">
                     Property Estimate
                   </h4>
 

@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 
 import { estimateSchema } from "@/lib/validations/estimateSchema";
 import { calculateEstimate } from "@/lib/valuation";
+import { checkRateLimit } from "@/lib/utils/rateLimit";
 
 export async function POST(req: Request) {
   try {
@@ -15,6 +16,19 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
+      );
+    }
+
+    const { allowed } = checkRateLimit(
+      `estimate:${session.user.email}`,
+      20,
+      10 * 60 * 1000
+    );
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many estimate requests. Please slow down." },
+        { status: 429 }
       );
     }
 
@@ -41,6 +55,10 @@ export async function POST(req: Request) {
     const estimate = await prisma.estimate.create({
       data: {
         ...validated,
+
+        // Normalize "" (a reset/never-selected form field) to null
+        // rather than storing it as a literal empty string.
+        villaType: validated.villaType || null,
 
         userId: user.id,
 

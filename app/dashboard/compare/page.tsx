@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import CompareSelector from "@/components/dashboard/compare/CompareSelector";
+import FadeInUp from "@/components/shared/FadeInUp";
 
 export default async function ComparePropertiesPage() {
   const session = await getServerSession(authOptions);
@@ -17,9 +18,19 @@ export default async function ComparePropertiesPage() {
         email: session.user.email,
       },
     },
+    select: {
+      id: true,
+      sector: true,
+      propertyType: true,
+      propertySize: true,
+      estimatedMin: true,
+      estimatedMax: true,
+      createdAt: true,
+    },
     orderBy: {
       createdAt: "desc",
     },
+    take: 100,
   });
 
   const formattedEstimates = estimates.map((estimate: (typeof estimates)[number]) => ({
@@ -32,6 +43,7 @@ export default async function ComparePropertiesPage() {
   }));
 
   return (
+    <FadeInUp>
     <div className="mx-auto max-w-7xl px-6 py-8">
       <h1 className="mb-8 text-3xl font-bold">
         Compare Properties
@@ -39,5 +51,6 @@ export default async function ComparePropertiesPage() {
 
       <CompareSelector estimates={formattedEstimates} />
     </div>
+    </FadeInUp>
   );
 }

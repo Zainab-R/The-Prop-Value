@@ -1,26 +1,15 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth/guards";
 
 export async function updateAdminProfile(
   name: string,
   email: string
 ) {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user) {
-    throw new Error("You must be logged in.");
-  }
-
-  const userId = (session.user as any).id;
-  const role = (session.user as any).role;
-
-  if (!userId || role !== "ADMIN") {
-    throw new Error("Unauthorized.");
-  }
+  const session = await requireAdmin();
+  const userId = session.user.id;
 
   const trimmedName = name.trim();
   const trimmedEmail = email.trim().toLowerCase();
@@ -75,18 +64,8 @@ export async function changeAdminPassword(
   newPassword: string,
   confirmPassword: string
 ) {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user) {
-    throw new Error("You must be logged in.");
-  }
-
-  const userId = (session.user as any).id;
-  const role = (session.user as any).role;
-
-  if (!userId || role !== "ADMIN") {
-    throw new Error("Unauthorized.");
-  }
+  const session = await requireAdmin();
+  const userId = session.user.id;
 
   if (!currentPassword) {
     throw new Error("Current password is required.");

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FeaturePage from "@/components/FeaturePage";
 import {
   Building2,
@@ -5,6 +6,12 @@ import {
   Home,
   Layers3,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Construction Insights | Prop Value",
+  description:
+    "Evaluate construction quality, development stage, and property specifications to estimate the value of residential houses with greater accuracy and confidence.",
+};
 
 export default function ConstructionInsightsPage() {
   return (

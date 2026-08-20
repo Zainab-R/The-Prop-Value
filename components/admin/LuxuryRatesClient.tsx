@@ -45,7 +45,7 @@ export default function LuxuryRatesClient({
 
           <button
             onClick={() => setOpen(true)}
-            className="flex items-center gap-2 rounded-xl bg-[#123A6D] px-5 py-2.5 text-white transition hover:bg-[#0F315D]"
+            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-white transition hover:bg-[#0F315D]"
           >
             <Plus className="h-5 w-5" />
             Add Luxury Rate

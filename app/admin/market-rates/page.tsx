@@ -9,6 +9,7 @@ type MarketRateRow = {
   propertyType: string;
   propertySize: string;
   basePrice: number;
+  villaType: string | null;
 };
 
 export default async function MarketRatesPage() {
@@ -26,12 +27,13 @@ export default async function MarketRatesPage() {
     propertyType: rate.propertyType,
     propertySize: rate.propertySize,
     basePrice: Number(rate.basePrice),
+    villaType: rate.villaType,
   }));
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold text-[#123A6D]">
+        <h1 className="text-4xl font-bold text-primary">
           Market Rates
         </h1>
 

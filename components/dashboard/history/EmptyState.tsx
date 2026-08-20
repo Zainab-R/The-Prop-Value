@@ -13,7 +13,7 @@ export default function EmptyState() {
       </h2>
 
       <p className="mt-2 text-gray-500">
-        You haven't generated any property estimates yet.
+        You haven&apos;t generated any property estimates yet.
       </p>
 
       <Link

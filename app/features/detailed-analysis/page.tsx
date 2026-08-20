@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FeaturePage from "@/components/FeaturePage";
 import {
   BarChart3,
@@ -5,6 +6,12 @@ import {
   Calculator,
   ClipboardList,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Detailed Analysis | Prop Value",
+  description:
+    "Gain a complete understanding of how each property attribute contributes to the estimated value. Every estimate is supported by a transparent breakdown of pricing factors and valuation insights.",
+};
 
 export default function DetailedAnalysisPage() {
   return (

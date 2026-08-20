@@ -70,7 +70,7 @@ export default function Features() {
             FEATURES
           </span>
 
-          <h2 className="mt-6 text-5xl font-bold text-[#102A43]">
+          <h2 className="mt-6 text-5xl font-bold text-primary">
             Everything You Need
             <br />
             for Accurate Property Estimates
@@ -139,7 +139,7 @@ export default function Features() {
                   <Icon className="h-8 w-8 text-white" />
                 </div>
 
-                <h3 className="text-2xl font-bold text-[#102A43]">
+                <h3 className="text-2xl font-bold text-primary">
                   {feature.title}
                 </h3>
 

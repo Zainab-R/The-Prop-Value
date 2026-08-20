@@ -2,11 +2,14 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth/guards";
 
 export async function createLuxuryRate(
   level: string,
   multiplier: number
 ) {
+  await requireAdmin();
+
   const name = level.trim();
 
   if (!name) {
@@ -42,6 +45,8 @@ export async function updateLuxuryRate(
   level: string,
   multiplier: number
 ) {
+  await requireAdmin();
+
   const name = level.trim();
 
   if (!id || !id.trim()) {
@@ -83,6 +88,8 @@ export async function updateLuxuryRate(
 }
 
 export async function deleteLuxuryRate(id: string) {
+  await requireAdmin();
+
   if (!id || !id.trim()) {
     throw new Error("Luxury rate ID is required.");
   }

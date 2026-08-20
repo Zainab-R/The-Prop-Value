@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | Prop Value",
+  description:
+    "The terms and conditions governing your use of the Prop Value property valuation platform.",
+};
 
 export default function TermsOfServicePage() {
   return (
@@ -6,7 +13,7 @@ export default function TermsOfServicePage() {
       className="min-h-screen bg-cover bg-center bg-fixed"
       style={{
         backgroundImage:
-          "linear-gradient(rgba(11,31,58,0.72), rgba(11,31,58,0.72)), url('/terms-bg.jpg')",
+          "linear-gradient(160deg, var(--color-primary) 0%, #0B1F3A 60%, #081226 100%)",
       }}
     >
       <div className="mx-auto max-w-5xl px-6 py-20">
@@ -30,7 +37,7 @@ export default function TermsOfServicePage() {
         {/* Content */}
         <div className="space-y-8 rounded-3xl border border-white/20 bg-white/95 p-10 shadow-2xl backdrop-blur-md">
           <section>
-            <h2 className="mb-3 text-2xl font-bold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-bold text-primary">
               Acceptance of Terms
             </h2>
 
@@ -40,7 +47,7 @@ export default function TermsOfServicePage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-2xl font-bold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-bold text-primary">
               Service Description
             </h2>
 
@@ -56,7 +63,7 @@ export default function TermsOfServicePage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-2xl font-bold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-bold text-primary">
               User Responsibilities
             </h2>
 
@@ -68,7 +75,7 @@ export default function TermsOfServicePage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-2xl font-bold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-bold text-primary">
               Disclaimer
             </h2>
 
@@ -79,7 +86,7 @@ export default function TermsOfServicePage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-2xl font-bold text-[#102A43]">
+            <h2 className="mb-3 text-2xl font-bold text-primary">
               Changes
             </h2>
 

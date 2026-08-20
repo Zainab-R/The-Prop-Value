@@ -1,14 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowLeft,
   ArrowRight,
   LineChart,
-  MapPinned,
-  TrendingUp,
-  SlidersHorizontal,
-  ShieldCheck,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Market Analysis | Prop Value",
+  description:
+    "See how Prop Value analyzes DHA Multan market conditions and property-specific factors to arrive at a reliable estimated value.",
+};
 
 const steps = [
   {
@@ -105,12 +108,12 @@ export default function MarketAnalysisPage() {
       {/* Process */}
       <section className="py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <h2 className="text-center text-4xl font-bold text-[#102A43]">
+          <h2 className="text-center text-4xl font-bold text-primary">
             How Market Analysis Works
           </h2>
 
           <p className="mx-auto mt-6 max-w-3xl text-center text-lg text-slate-600">
-            Every valuation is based on a detailed analysis of your property's
+            Every valuation is based on a detailed analysis of your property&apos;s
             characteristics and current market conditions to ensure a reliable
             and transparent estimate.
           </p>
@@ -125,7 +128,7 @@ export default function MarketAnalysisPage() {
                   STEP {step.number}
                 </span>
 
-                <h3 className="mt-2 text-2xl font-bold text-[#102A43]">
+                <h3 className="mt-2 text-2xl font-bold text-primary">
                   {step.title}
                 </h3>
 
@@ -141,7 +144,7 @@ export default function MarketAnalysisPage() {
       {/* CTA */}
       <section className="py-24">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="rounded-3xl bg-gradient-to-r from-[#102A43] to-[#1E3A5F] px-10 py-16 text-center shadow-2xl">
+          <div className="rounded-3xl bg-gradient-to-r from-primary to-[#1E3A5F] px-10 py-16 text-center shadow-2xl">
             <span className="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-orange-300">
               NEXT STEP
             </span>
@@ -151,12 +154,18 @@ export default function MarketAnalysisPage() {
             </h2>
 
             <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-              After analyzing your property's details and market conditions,
+              After analyzing your property&apos;s details and market conditions,
               the next step is to view the estimated market value along with
               the factors that influenced the calculation.
             </p>
 
-            
+            <Link
+              href="/register"
+              className="mt-8 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-8 py-4 font-semibold text-white shadow-lg transition hover:-translate-y-1 hover:bg-orange-600"
+            >
+              Get Started
+              <ArrowRight className="h-5 w-5" />
+            </Link>
           </div>
         </div>
       </section>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -6,6 +7,12 @@ import {
   CheckCircle,
   ClipboardList,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Enter Property Details | Prop Value",
+  description:
+    "Begin your property valuation by providing accurate details such as the location, property type, size, construction status, and amenities.",
+};
 
 export default function EnterPropertyDetailsPage() {
   const steps = [
@@ -110,7 +117,7 @@ export default function EnterPropertyDetailsPage() {
  {/* Steps */}
       <section className="py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <h2 className="text-center text-4xl font-bold text-[#102A43]">
+          <h2 className="text-center text-4xl font-bold text-primary">
             Property Details Process
           </h2>
 
@@ -130,7 +137,7 @@ export default function EnterPropertyDetailsPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-2xl font-semibold text-[#102A43]">
+                  <h3 className="text-2xl font-semibold text-primary">
                     {step.title}
                   </h3>
 
@@ -147,7 +154,7 @@ export default function EnterPropertyDetailsPage() {
 
       {/* CTA */}
       <section className="bg-white py-20">
-        <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-to-r from-[#102A43] to-[#1E3A5F] px-10 py-16 text-center shadow-xl">
+        <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-to-r from-primary to-[#1E3A5F] px-10 py-16 text-center shadow-xl">
           <CheckCircle className="mx-auto h-14 w-14 text-orange-400" />
 
           <h2 className="mt-6 text-4xl font-bold text-white">
@@ -155,12 +162,18 @@ export default function EnterPropertyDetailsPage() {
           </h2>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            Once you've gathered your property details, proceed to the valuation
+            Once you&apos;ve gathered your property details, proceed to the valuation
             form and receive an instant estimated market value for your property
             in DHA Multan.
           </p>
 
-         
+          <Link
+            href="/register"
+            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-8 py-4 font-semibold text-white shadow-lg transition hover:-translate-y-1 hover:bg-orange-600"
+          >
+            Get Started
+            <ArrowRight className="h-5 w-5" />
+          </Link>
         </div>
       </section>
     </main>

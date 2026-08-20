@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import {
   BadgeCheck,
   Globe,
@@ -9,10 +12,14 @@ import {
 } from "lucide-react";
 
 export default function Footer() {
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
+  const dashboardHref = session?.user?.role === "ADMIN" ? "/admin" : "/dashboard";
+
   return (
     <footer
       id="contact"
-      className="bg-[#102A43] text-white"
+      className="bg-primary text-white"
     >
       <div className="mx-auto max-w-7xl px-6 py-20">
 
@@ -32,7 +39,7 @@ export default function Footer() {
     <div>
       <h2 className="text-xl font-normal">
   <span className="text-white">The Prop </span>
-  <span className="text-[#C97A2B]">Value</span>
+  <span className="text-accent-light">Value</span>
 </h2>
 
       <p className="text-lg text-slate-300">
@@ -120,29 +127,35 @@ export default function Footer() {
 
             <ul className="space-y-4 text-slate-300">
 
-              <li>
-                <Link href="/register">
-                  Get Started
-                </Link>
-              </li>
+              {isLoggedIn ? (
+                <>
+                  <li>
+                    <Link href="/dashboard/estimate">
+                      Estimate Property
+                    </Link>
+                  </li>
 
-              <li>
-                <Link href="/login">
-                  Login
-                </Link>
-              </li>
+                  <li>
+                    <Link href={dashboardHref}>
+                      Dashboard
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link href="/register">
+                      Get Started
+                    </Link>
+                  </li>
 
-              <li>
-                <a href="#">
-                  Estimate Property
-                </a>
-              </li>
-
-              <li>
-                <a href="#">
-                  Dashboard
-                </a>
-              </li>
+                  <li>
+                    <Link href="/login">
+                      Login
+                    </Link>
+                  </li>
+                </>
+              )}
 
             </ul>
 

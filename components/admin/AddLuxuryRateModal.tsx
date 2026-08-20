@@ -57,7 +57,7 @@ export default function AddLuxuryRateModal({
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
 
         <div className="flex items-center justify-between border-b p-5">
-          <h2 className="text-xl font-semibold text-[#123A6D]">
+          <h2 className="text-xl font-semibold text-primary">
             Add Luxury Rate
           </h2>
 
@@ -76,7 +76,7 @@ export default function AddLuxuryRateModal({
             <input
               value={level}
               onChange={(e) => setLevel(e.target.value)}
-              className="w-full rounded-xl border px-4 py-3 focus:border-[#123A6D] focus:outline-none"
+              className="w-full rounded-xl border px-4 py-3 focus:border-primary focus:outline-none"
               placeholder="Premium"
             />
           </div>
@@ -91,7 +91,7 @@ export default function AddLuxuryRateModal({
               step="0.01"
               value={multiplier}
               onChange={(e) => setMultiplier(e.target.value)}
-              className="w-full rounded-xl border px-4 py-3 focus:border-[#123A6D] focus:outline-none"
+              className="w-full rounded-xl border px-4 py-3 focus:border-primary focus:outline-none"
               placeholder="1.20"
             />
           </div>
@@ -116,7 +116,7 @@ export default function AddLuxuryRateModal({
           <button
             disabled={pending}
             onClick={handleSubmit}
-            className="rounded-xl bg-[#123A6D] px-5 py-2 text-white hover:bg-[#0F315D] disabled:opacity-50"
+            className="rounded-xl bg-primary px-5 py-2 text-white hover:bg-[#0F315D] disabled:opacity-50"
           >
             {pending ? "Saving..." : "Save"}
           </button>

@@ -18,7 +18,7 @@ export default function FAQ() {
     <section id="faq" className="py-24 bg-white">
       <div className="max-w-5xl mx-auto px-6">
 
-        <h2 className="text-center text-4xl font-bold text-[#102A43]">
+        <h2 className="text-center text-4xl font-bold text-primary">
           Frequently Asked Questions
         </h2>
 
@@ -28,7 +28,7 @@ export default function FAQ() {
               key={faq.q}
               className="rounded-xl border p-6"
             >
-              <h3 className="font-semibold text-lg text-[#102A43]">
+              <h3 className="font-semibold text-lg text-primary">
                 {faq.q}
               </h3>
 

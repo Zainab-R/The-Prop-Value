@@ -9,6 +9,8 @@ import {
   updateAmenity,
   deleteAmenity,
 } from "./actions";
+import DeleteDialog from "@/components/admin/DeleteDialog";
+import RowActionsMenu from "@/components/shared/RowActionsMenu";
 
 type Amenity = {
   id: string;
@@ -34,6 +36,7 @@ export default function AmenityManager({
 
   const [isSaving, setIsSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Amenity | null>(null);
 
   const openAddModal = () => {
     setEditingAmenity(null);
@@ -100,14 +103,14 @@ export default function AmenityManager({
 
         toast.success("Amenity updated successfully.");
       } else {
-        await createAmenity(
+        const created = await createAmenity(
           trimmedName,
           numericValue
         );
 
-        toast.success("Amenity added successfully.");
+        setAmenities((current) => [...current, created]);
 
-        window.location.reload();
+        toast.success("Amenity added successfully.");
       }
 
       closeModal();
@@ -123,13 +126,11 @@ export default function AmenityManager({
     }
   };
 
-  const handleDelete = async (id: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this amenity?"
-    );
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
 
-    if (!confirmed) return;
-
+    const id = deleteTarget.id;
+    setDeleteTarget(null);
     setDeletingId(id);
 
     try {
@@ -218,33 +219,24 @@ export default function AmenityManager({
                       {amenity.value.toLocaleString()}
                     </td>
 
-                    <td className="px-6 py-5">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            openEditModal(amenity)
-                          }
-                          className="rounded-lg p-2 text-blue-600 transition hover:bg-blue-50"
-                          title="Edit"
-                        >
-                          <Pencil size={18} />
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDelete(amenity.id)
-                          }
-                          disabled={
-                            deletingId === amenity.id
-                          }
-                          className="rounded-lg p-2 text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-                          title="Delete"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
+                    <td className="px-6 py-5 text-right">
+                      <RowActionsMenu
+                        ariaLabel="Amenity actions"
+                        actions={[
+                          {
+                            label: "Edit",
+                            icon: Pencil,
+                            onClick: () => openEditModal(amenity),
+                          },
+                          {
+                            label: "Delete",
+                            icon: Trash2,
+                            variant: "destructive",
+                            disabled: deletingId === amenity.id,
+                            onClick: () => setDeleteTarget(amenity),
+                          },
+                        ]}
+                      />
                     </td>
                   </tr>
                 ))
@@ -356,6 +348,18 @@ export default function AmenityManager({
           </div>
         </div>
       )}
+
+      <DeleteDialog
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete amenity"
+        description={
+          deleteTarget
+            ? `Are you sure you want to delete "${deleteTarget.name}"? This action cannot be undone.`
+            : undefined
+        }
+      />
     </>
   );
 }

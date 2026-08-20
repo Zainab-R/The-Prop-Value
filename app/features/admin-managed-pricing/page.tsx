@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FeaturePage from "@/components/FeaturePage";
 import {
   Settings,
@@ -5,6 +6,12 @@ import {
   RefreshCw,
   ShieldCheck,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Admin Managed Pricing | Prop Value",
+  description:
+    "Maintain accurate and up-to-date property valuations through a centralized pricing system. Administrators can manage sector rates, valuation factors, and market adjustments without modifying the application's code.",
+};
 
 export default function AdminManagedPricingPage() {
   return (

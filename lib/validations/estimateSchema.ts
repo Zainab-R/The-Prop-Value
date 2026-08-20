@@ -12,6 +12,12 @@ export const estimateSchema = z.object({
 
   propertySize: z.string().min(1, "Please select a property size"),
 
+  // Only meaningful when sector === "C" — DHA Multan Sector C has no
+  // plain residential plots; its inventory is entirely through named
+  // housing societies (ATC Villas, DHA Villas, Premium Villas, Askari
+  // Housing Society). See lib/propertyOptions.ts.
+  villaType: z.string().optional(),
+
   constructionStatus: z.string().optional(),
 
   cornerPlot: z.boolean().default(false),

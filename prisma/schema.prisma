@@ -17,6 +17,9 @@ model User {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   role          Role       @default(USER)
+  notifyEmail     Boolean  @default(true)
+  notifyEstimate  Boolean  @default(true)
+  notifyMarket    Boolean  @default(false)
   accounts      Account[]
   estimates     Estimate[]
   sessions      Session[]
@@ -62,6 +65,7 @@ model Estimate {
   sector             String
   propertyType       String
   propertySize       String
+  villaType          String?
   constructionStatus String?
   bedrooms           Int?
   bathrooms          Int?
@@ -77,6 +81,9 @@ model Estimate {
   parkFacing         Boolean  @default(false)
   updatedAt          DateTime @updatedAt
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model MarketRate {
@@ -87,6 +94,13 @@ model MarketRate {
   basePrice    Decimal  @db.Decimal(12, 2)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  villaType    String?
+
+  @@index([propertyType, propertySize, sector])
+  @@index([propertyType])
+  @@index([sector])
+  @@index([sector, villaType, propertyType, propertySize])
+  @@index([villaType])
 }
 
 model LuxuryRate {

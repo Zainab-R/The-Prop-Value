@@ -69,7 +69,7 @@ export default function Hero() {
 
             <a
               href="#features"
-              className="rounded-xl border border-white/20 bg-white/90 px-8 py-4 font-semibold text-[#102A43] shadow-lg backdrop-blur-sm transition duration-300 hover:bg-white"
+              className="rounded-xl border border-white/20 bg-white/90 px-8 py-4 font-semibold text-primary shadow-lg backdrop-blur-sm transition duration-300 hover:bg-white"
             >
               Learn More
             </a>
@@ -79,17 +79,17 @@ export default function Hero() {
 
           <div className="mt-14 flex flex-wrap gap-10">
             <div>
-              <h3 className="text-3xl font-bold text-white">25+</h3>
+              <p className="text-3xl font-bold text-white">25+</p>
               <p className="mt-1 text-slate-300">DHA Sectors</p>
             </div>
 
             <div>
-              <h3 className="text-3xl font-bold text-white">100+</h3>
+              <p className="text-3xl font-bold text-white">100+</p>
               <p className="mt-1 text-slate-300">Property Factors</p>
             </div>
 
             <div>
-              <h3 className="text-3xl font-bold text-white">Fast</h3>
+              <p className="text-3xl font-bold text-white">Fast</p>
               <p className="mt-1 text-slate-300">Estimate Generation</p>
             </div>
           </div>
@@ -108,7 +108,7 @@ export default function Hero() {
           <div className="rounded-3xl border border-white/20 bg-white/95 p-8 shadow-2xl backdrop-blur-md">
             <div className="mb-8 flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-bold text-[#102A43]">
+                <h3 className="text-xl font-bold text-primary">
                   Property Estimate
                 </h3>
 
@@ -121,12 +121,12 @@ export default function Hero() {
             <div className="space-y-5">
               <div className="flex justify-between rounded-xl bg-slate-100 p-4">
                 <span className="text-slate-600">Sector</span>
-                <strong className="text-[#102A43]">Sector D</strong>
+                <strong className="text-primary">Sector D</strong>
               </div>
 
               <div className="flex justify-between rounded-xl bg-slate-100 p-4">
                 <span className="text-slate-600">Property</span>
-                <strong className="text-[#102A43]">10 Marla Plot</strong>
+                <strong className="text-primary">10 Marla Plot</strong>
               </div>
 
               <div className="flex justify-between rounded-xl bg-slate-100 p-4">
@@ -138,7 +138,7 @@ export default function Hero() {
 
               <div className="flex justify-between rounded-xl bg-slate-100 p-4">
                 <span className="text-slate-600">Confidence</span>
-                <strong className="text-[#102A43]">92%</strong>
+                <strong className="text-primary">92%</strong>
               </div>
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function Hero() {
             className="absolute -left-8 top-20 rounded-2xl border border-white/20 bg-white/95 p-5 shadow-xl backdrop-blur-md"
           >
             <MapPinned className="mb-2 h-6 w-6 text-orange-500" />
-            <p className="font-semibold text-[#102A43]">
+            <p className="font-semibold text-primary">
               DHA Multan
             </p>
           </motion.div>
@@ -169,8 +169,8 @@ export default function Hero() {
             }}
             className="absolute -right-8 bottom-10 rounded-2xl border border-white/20 bg-white/95 p-5 shadow-xl backdrop-blur-md"
           >
-            <Home className="mb-2 h-6 w-6 text-[#102A43]" />
-            <p className="font-semibold text-[#102A43]">
+            <Home className="mb-2 h-6 w-6 text-primary" />
+            <p className="font-semibold text-primary">
               Premium Housing
             </p>
           </motion.div>
