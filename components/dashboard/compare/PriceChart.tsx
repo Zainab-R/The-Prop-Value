@@ -11,31 +11,21 @@ import {
 } from "recharts";
 
 interface Estimate {
+  label: string;
   estimatedMin: string;
   estimatedMax: string;
 }
 
 interface PriceChartProps {
-  first: Estimate;
-  second: Estimate;
+  estimates: Estimate[];
 }
 
-export default function PriceChart({
-  first,
-  second,
-}: PriceChartProps) {
-  const data = [
-    {
-      name: "Property 1",
-      Min: Number(first.estimatedMin),
-      Max: Number(first.estimatedMax),
-    },
-    {
-      name: "Property 2",
-      Min: Number(second.estimatedMin),
-      Max: Number(second.estimatedMax),
-    },
-  ];
+export default function PriceChart({ estimates }: PriceChartProps) {
+  const data = estimates.map((estimate) => ({
+    name: estimate.label,
+    Min: Number(estimate.estimatedMin),
+    Max: Number(estimate.estimatedMax),
+  }));
 
   return (
     <div className="rounded-xl border bg-white p-6 shadow-sm">

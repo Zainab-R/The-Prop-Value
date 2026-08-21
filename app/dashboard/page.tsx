@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
 import { authOptions } from "@/lib/auth";
@@ -17,6 +18,11 @@ import FadeInUp from "@/components/shared/FadeInUp";
 const PropertyTrend = dynamic(() => import("@/components/dashboard/PropertyTrend"), {
   loading: () => <ChartSkeleton height={320} />,
 });
+
+export const metadata: Metadata = {
+  title: "Dashboard | Prop Value",
+  description: "Your DHA Multan property valuation dashboard.",
+};
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);

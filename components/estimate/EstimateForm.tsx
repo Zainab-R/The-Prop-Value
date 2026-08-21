@@ -355,6 +355,19 @@ export default function EstimateForm() {
 
       {propertyType === "House" && (
         <>
+          <div>
+            <h3 className="font-semibold text-slate-800">
+              House Details
+            </h3>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Bedrooms, bathrooms, and furnishing are recorded on your
+              estimate for reference but don&apos;t currently change the
+              price — pricing is based on sector, size, and the factors
+              above. Luxury level below does affect the price.
+            </p>
+          </div>
+
           <div className="grid gap-6 md:grid-cols-2">
             <div>
               <label htmlFor="bedrooms" className="mb-2 block font-medium text-slate-700">

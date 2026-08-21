@@ -13,6 +13,7 @@ interface Estimate {
   estimatedMin: string;
   estimatedMax: string;
   createdAt: string;
+  isSaved?: boolean;
 }
 
 interface HistoryListProps {
@@ -96,6 +97,7 @@ export default function HistoryList({
   estimatedMin={estimate.estimatedMin}
   estimatedMax={estimate.estimatedMax}
   createdAt={new Date(estimate.createdAt)}
+  isSaved={estimate.isSaved}
 />
         ))}
       </div>

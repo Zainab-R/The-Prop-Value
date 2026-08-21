@@ -136,6 +136,14 @@ body {
   }
 }
 
+/* Elements with .no-print (e.g. the report page's print button) are
+   hidden in the actual printed/saved-as-PDF output. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
 /*
  * Pure-CSS entrance animation for page/section mount — used instead
  * of a framer-motion wrapper on dashboard/admin pages so those routes

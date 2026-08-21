@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 
 import AmenityManager from "./AmenityManager";
+
+export const metadata: Metadata = {
+  title: "Amenities | Prop Value",
+};
 
 export default async function AmenitiesPage() {
   const amenities = await prisma.amenityRate.findMany({

@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import AuthLayout from "@/components/auth/AuthLayout";
 import VerifyEmailForm from "@/components/auth/VerifyEmailForm";
 
 interface PageProps {
   searchParams: Promise<{ email?: string }>;
 }
+
+export const metadata: Metadata = {
+  title: "Verify Email | Prop Value",
+};
 
 export default async function VerifyEmailPage({ searchParams }: PageProps) {
   const { email } = await searchParams;

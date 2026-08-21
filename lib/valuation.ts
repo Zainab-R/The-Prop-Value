@@ -1,5 +1,20 @@
 import { prisma } from "@/lib/prisma";
 
+/**
+ * A single line of the valuation breakdown, snapshotted at estimate
+ * creation time and stored on Estimate.breakdown — so the result page
+ * and any generated report keep reflecting what was actually applied,
+ * even if an admin later edits a rate/multiplier.
+ */
+export interface ValuationBreakdownEntry {
+  label: string;
+  type: "base" | "multiplier" | "flat";
+  /** For type "multiplier": the signed percentage, e.g. 7 for +7%. */
+  percent?: number;
+  /** For type "base" or "flat": the PKR amount. */
+  amount?: number;
+}
+
 export interface EstimateData {
   propertyType: string;
   propertySize: string;
@@ -44,30 +59,48 @@ export async function calculateEstimate(data: EstimateData) {
 
   let estimate = Number(marketRate.basePrice);
 
-  // -----------------------------
-  // Plot Features
-  // -----------------------------
-  if (data.cornerPlot) {
-    estimate *= 1.07;
-  }
-
-  if (data.parkFacing) {
-    estimate *= 1.05;
-  }
-
-  if (data.mainBoulevard) {
-    estimate *= 1.08;
-  }
+  const breakdown: ValuationBreakdownEntry[] = [
+    {
+      label: "Base Market Rate",
+      type: "base",
+      amount: Number(marketRate.basePrice),
+    },
+  ];
 
   // -----------------------------
-  // Construction Status
+  // Plot Features & Construction Status
   // -----------------------------
-  if (
-    data.constructionStatus &&
-    data.constructionStatus.toLowerCase() === "ready"
-  ) {
-    estimate *= 1.15;
+  // Multipliers live in AdjustmentFactor (admin-editable) rather than
+  // as literals here, so pricing can be tuned without a code change.
+  const adjustmentFactors = await prisma.adjustmentFactor.findMany();
+  const factorMultiplier = new Map<string, number>(
+    adjustmentFactors.map((factor) => [factor.key, factor.multiplier])
+  );
+  const factorLabel = new Map<string, string>(
+    adjustmentFactors.map((factor) => [factor.key, factor.label])
+  );
+
+  function applyFactor(key: string, active: boolean) {
+    if (!active) return;
+
+    const multiplier = factorMultiplier.get(key);
+    if (multiplier === undefined) return;
+
+    estimate *= multiplier;
+    breakdown.push({
+      label: factorLabel.get(key) ?? key,
+      type: "multiplier",
+      percent: Math.round((multiplier - 1) * 100),
+    });
   }
+
+  applyFactor("cornerPlot", data.cornerPlot);
+  applyFactor("parkFacing", data.parkFacing);
+  applyFactor("mainBoulevard", data.mainBoulevard);
+  applyFactor(
+    "readyToMove",
+    Boolean(data.constructionStatus?.toLowerCase() === "ready")
+  );
 
   // -----------------------------
   // Luxury Multiplier
@@ -81,6 +114,11 @@ export async function calculateEstimate(data: EstimateData) {
 
     if (luxury) {
       estimate *= luxury.multiplier;
+      breakdown.push({
+        label: `${data.luxuryLevel} Finish`,
+        type: "multiplier",
+        percent: Math.round((luxury.multiplier - 1) * 100),
+      });
     }
   }
 
@@ -96,6 +134,11 @@ export async function calculateEstimate(data: EstimateData) {
 
     if (road) {
       estimate *= road.multiplier;
+      breakdown.push({
+        label: `${data.roadType} Road`,
+        type: "multiplier",
+        percent: Math.round((road.multiplier - 1) * 100),
+      });
     }
   }
 
@@ -111,12 +154,15 @@ export async function calculateEstimate(data: EstimateData) {
       },
     });
 
-    const totalAmenityValue = amenityRates.reduce(
-      (sum, amenity) => sum + Number(amenity.value),
-      0
-    );
-
-    estimate += totalAmenityValue;
+    for (const amenity of amenityRates) {
+      const value = Number(amenity.value);
+      estimate += value;
+      breakdown.push({
+        label: amenity.name,
+        type: "flat",
+        amount: value,
+      });
+    }
   }
 
   // -----------------------------
@@ -138,5 +184,7 @@ export async function calculateEstimate(data: EstimateData) {
     estimatedMax,
 
     confidence: 95,
+
+    breakdown,
   };
 }

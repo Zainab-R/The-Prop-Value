@@ -1,30 +1,22 @@
 interface Estimate {
+  label: string;
   estimatedMin: string;
   estimatedMax: string;
 }
 
 interface DifferenceCardsProps {
-  first: Estimate;
-  second: Estimate;
+  estimates: Estimate[];
 }
 
-export default function DifferenceCards({
-  first,
-  second,
-}: DifferenceCardsProps) {
-  const firstAvg =
-    (Number(first.estimatedMin) + Number(first.estimatedMax)) / 2;
+export default function DifferenceCards({ estimates }: DifferenceCardsProps) {
+  const withAvg = estimates.map((estimate) => ({
+    ...estimate,
+    avg: (Number(estimate.estimatedMin) + Number(estimate.estimatedMax)) / 2,
+  }));
 
-  const secondAvg =
-    (Number(second.estimatedMin) + Number(second.estimatedMax)) / 2;
-
-  const difference = Math.abs(firstAvg - secondAvg);
-
-  const higher =
-    firstAvg > secondAvg ? "Property 1" : "Property 2";
-
-  const betterValue =
-    firstAvg < secondAvg ? "Property 1" : "Property 2";
+  const highest = withAvg.reduce((a, b) => (b.avg > a.avg ? b : a));
+  const lowest = withAvg.reduce((a, b) => (b.avg < a.avg ? b : a));
+  const range = highest.avg - lowest.avg;
 
   const formatPrice = (value: number) =>
     new Intl.NumberFormat("en-PK").format(value);
@@ -32,32 +24,26 @@ export default function DifferenceCards({
   return (
     <div className="grid gap-6 md:grid-cols-3">
       <div className="rounded-xl border bg-white p-6 shadow-sm">
-        <p className="text-sm text-gray-500">
-          Higher Estimated Value
-        </p>
+        <p className="text-sm text-gray-500">Highest Estimated Value</p>
 
         <h2 className="mt-2 text-2xl font-bold text-orange-600">
-          {higher}
+          {highest.label}
         </h2>
       </div>
 
       <div className="rounded-xl border bg-white p-6 shadow-sm">
-        <p className="text-sm text-gray-500">
-          Price Difference
-        </p>
+        <p className="text-sm text-gray-500">Value Range</p>
 
         <h2 className="mt-2 text-2xl font-bold text-orange-600">
-          PKR {formatPrice(difference)}
+          PKR {formatPrice(range)}
         </h2>
       </div>
 
       <div className="rounded-xl border bg-white p-6 shadow-sm">
-        <p className="text-sm text-gray-500">
-          Better Value
-        </p>
+        <p className="text-sm text-gray-500">Lowest Estimated Value</p>
 
         <h2 className="mt-2 text-2xl font-bold text-green-600">
-          {betterValue}
+          {lowest.label}
         </h2>
       </div>
     </div>

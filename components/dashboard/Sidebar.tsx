@@ -11,6 +11,7 @@ import {
   History,
   GitCompareArrows,
   BarChart3,
+  Bookmark,
   User,
   Settings,
   LogOut,
@@ -33,6 +34,11 @@ const menuItems = [
     title: "Estimate History",
     href: "/dashboard/history",
     icon: History,
+  },
+  {
+    title: "Saved Properties",
+    href: "/dashboard/saved",
+    icon: Bookmark,
   },
   {
     title: "Compare Properties",

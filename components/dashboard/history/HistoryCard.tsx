@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import {
   CalendarDays,
   Building2,
   Ruler,
   Wallet,
   Trash2,
+  Bookmark,
+  BookmarkCheck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -17,6 +20,7 @@ interface HistoryCardProps {
   estimatedMin: string;
   estimatedMax: string;
   createdAt: Date;
+  isSaved?: boolean;
 }
 
 export default function HistoryCard({
@@ -27,11 +31,38 @@ export default function HistoryCard({
   estimatedMin,
   estimatedMax,
   createdAt,
+  isSaved = false,
 }: HistoryCardProps) {
   const router = useRouter();
+  const [saved, setSaved] = useState(isSaved);
+  const [savePending, setSavePending] = useState(false);
 
   const formatPrice = (value: string) =>
     new Intl.NumberFormat("en-PK").format(Number(value));
+
+  const handleToggleSave = async () => {
+    const next = !saved;
+
+    try {
+      setSavePending(true);
+
+      const response = await fetch(`/api/history/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isSaved: next }),
+      });
+
+      if (!response.ok) throw new Error();
+
+      setSaved(next);
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update saved status.");
+    } finally {
+      setSavePending(false);
+    }
+  };
 
   const handleDelete = async () => {
     const confirmed = window.confirm(
@@ -116,7 +147,20 @@ export default function HistoryCard({
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-end gap-3">
+        <button
+          onClick={handleToggleSave}
+          disabled={savePending}
+          className={`flex items-center gap-2 rounded-lg border px-4 py-2 transition disabled:cursor-not-allowed disabled:opacity-60 ${
+            saved
+              ? "border-accent bg-accent/10 text-accent"
+              : "border-slate-200 text-slate-600 hover:bg-slate-50"
+          }`}
+        >
+          {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+          {saved ? "Saved" : "Save"}
+        </button>
+
         <button
           onClick={handleDelete}
           className="flex items-center gap-2 rounded-lg border border-red-200 px-4 py-2 text-red-600 transition hover:bg-red-50"

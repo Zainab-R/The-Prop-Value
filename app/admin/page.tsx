@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import dynamic from "next/dynamic";
 import DashboardCard from "@/components/admin/DashboardCard";
@@ -30,9 +31,21 @@ import {
   TrendingUp,
   Activity,
   UserPlus,
+  Clock,
 } from "lucide-react";
 
+export const metadata: Metadata = {
+  title: "Admin Dashboard | Prop Value",
+};
+
 export default async function AdminDashboard() {
+  // A real, measured signal for the "database health" card below —
+  // rather than a hardcoded "Operational" label.
+  const dbCheckStart = Date.now();
+
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
   const [
     totalUsers,
     totalEstimates,
@@ -40,6 +53,7 @@ export default async function AdminDashboard() {
     totalLuxuryRates,
     totalRoadRates,
     totalAmenities,
+    estimatesToday,
 
     recentUsers,
 
@@ -66,6 +80,10 @@ export default async function AdminDashboard() {
     prisma.roadRate.count(),
 
     prisma.amenityRate.count(),
+
+    prisma.estimate.count({
+      where: { createdAt: { gte: startOfToday } },
+    }),
 
     prisma.user.findMany({
       take: 5,
@@ -143,6 +161,16 @@ export default async function AdminDashboard() {
     }),
   ]);
 
+  const dbLatencyMs = Date.now() - dbCheckStart;
+  const dbStatus =
+    dbLatencyMs < 800 ? "Healthy" : dbLatencyMs < 2500 ? "Slow" : "Degraded";
+  const dbStatusStyles =
+    dbStatus === "Healthy"
+      ? { badge: "bg-green-100 text-green-700", icon: "bg-green-100 text-green-600" }
+      : dbStatus === "Slow"
+        ? { badge: "bg-amber-100 text-amber-700", icon: "bg-amber-100 text-amber-600" }
+        : { badge: "bg-red-100 text-red-700", icon: "bg-red-100 text-red-600" };
+
   const monthlyData = [...monthlyRows]
     .sort((a, b) => a.month.getTime() - b.month.getTime())
     .map((row) => ({
@@ -213,6 +241,13 @@ export default async function AdminDashboard() {
           value={totalEstimates}
           icon={Calculator}
           color="bg-orange-500"
+        />
+
+        <DashboardCard
+          title="Valuations Today"
+          value={estimatesToday}
+          icon={Clock}
+          color="bg-indigo-500"
         />
 
         <DashboardCard
@@ -445,30 +480,30 @@ export default async function AdminDashboard() {
 
           </div>
 
-          {/* Platform Status */}
+          {/* Database Health */}
 
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
             <div className="mb-4 flex items-center gap-3">
-              <Activity className="h-10 w-10 rounded-xl bg-green-100 p-2 text-green-600" />
+              <Activity className={`h-10 w-10 rounded-xl p-2 ${dbStatusStyles.icon}`} />
 
               <div>
                 <h3 className="text-lg font-semibold text-primary">
-                  Platform Status
+                  Database
                 </h3>
 
                 <p className="text-sm text-slate-500">
-                  Overall system health
+                  Measured on this page load
                 </p>
               </div>
             </div>
 
-            <div className="inline-flex rounded-full bg-green-100 px-4 py-2 font-semibold text-green-700">
-              Operational
+            <div className={`inline-flex rounded-full px-4 py-2 font-semibold ${dbStatusStyles.badge}`}>
+              {dbStatus}
             </div>
 
             <p className="mt-4 text-slate-500">
-              All dashboard services are running normally.
+              Dashboard queries responded in {dbLatencyMs}ms.
             </p>
 
           </div>

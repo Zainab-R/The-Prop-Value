@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import EstimateForm from "@/components/estimate/EstimateForm";
+
+export const metadata: Metadata = {
+  title: "New Estimate | Prop Value",
+  description: "Get a property valuation estimate for DHA Multan.",
+};
 import FadeInUp from "@/components/shared/FadeInUp";
 
 export default function EstimatePage() {

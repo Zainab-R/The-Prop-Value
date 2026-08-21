@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
@@ -12,6 +13,10 @@ import {
   Pencil,
   Hash,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Profile | Prop Value",
+};
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);

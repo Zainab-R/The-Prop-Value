@@ -60,6 +60,10 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid email or password");
         }
 
+        if (user.status === "SUSPENDED") {
+          throw new Error("This account has been suspended. Contact support for help.");
+        }
+
         return {
           id: user.id,
           name: user.name,
@@ -75,6 +79,21 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
+    // Runs for every provider (Google included) — the Credentials
+    // provider already rejects suspended users in authorize() above,
+    // but Google's OAuth flow never calls authorize(), so this is
+    // what actually blocks a suspended user signing back in with it.
+    async signIn({ user }) {
+      if (!user.email) return true;
+
+      const dbUser = await prisma.user.findUnique({
+        where: { email: user.email },
+        select: { status: true },
+      });
+
+      return dbUser?.status !== "SUSPENDED";
+    },
+
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role;

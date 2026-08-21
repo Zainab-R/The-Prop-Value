@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import MarketRatesTable from "../../../components/admin/MarketRatesTable";
 
@@ -10,6 +11,10 @@ type MarketRateRow = {
   propertySize: string;
   basePrice: number;
   villaType: string | null;
+};
+
+export const metadata: Metadata = {
+  title: "Market Rates | Prop Value",
 };
 
 export default async function MarketRatesPage() {

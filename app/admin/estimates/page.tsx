@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import RecentEstimatesTable from "@/components/admin/RecentEstimatesTable";
 import Pagination from "@/components/shared/Pagination";
@@ -7,6 +8,10 @@ const PAGE_SIZE = 15;
 interface PageProps {
   searchParams: Promise<{ page?: string }>;
 }
+
+export const metadata: Metadata = {
+  title: "Manage Estimates | Prop Value",
+};
 
 export default async function AdminEstimatesPage({ searchParams }: PageProps) {
   const { page: pageParam } = await searchParams;

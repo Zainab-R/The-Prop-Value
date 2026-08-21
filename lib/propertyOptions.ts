@@ -214,3 +214,22 @@ export function getSizesForVillaType(
 
   return villaTypeSizes[villaType][propertyType] ?? [];
 }
+
+/**
+ * Every size in this app is expressed as "N Marla" or "N Kanal"
+ * (1 Kanal = 20 Marla) — parse it to a plain Marla count for
+ * price-per-unit display. Returns null for a size string that
+ * doesn't match either unit rather than guessing.
+ */
+export function parseSizeToMarla(propertySize: string): number | null {
+  const match = propertySize.trim().match(/^(\d+(?:\.\d+)?)\s*(Marla|Kanal)$/i);
+
+  if (!match) {
+    return null;
+  }
+
+  const value = Number(match[1]);
+  const unit = match[2].toLowerCase();
+
+  return unit === "kanal" ? value * 20 : value;
+}

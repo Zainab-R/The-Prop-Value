@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import DashboardCard from "@/components/admin/DashboardCard";
 import { Gem, TrendingUp, TrendingDown } from "lucide-react";
 import LuxuryRatesClient from "@/components/admin/LuxuryRatesClient";
+export const metadata: Metadata = {
+  title: "Luxury Rates | Prop Value",
+};
+
 export default async function LuxuryRatesPage() {
   const [totalLuxuryRates, luxuryRates] = await Promise.all([
     prisma.luxuryRate.count(),

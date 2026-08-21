@@ -1,9 +1,14 @@
 
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import MarketContent from "@/components/dashboard/insights/MarketContent";
 import FadeInUp from "@/components/shared/FadeInUp";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Market Insights | Prop Value",
+};
 
 export default async function MarketInsightsPage() {
   const rates = await prisma.marketRate.findMany({

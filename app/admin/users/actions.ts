@@ -64,6 +64,30 @@ export async function updateUserRole(userId: string, role: "USER" | "ADMIN") {
   return { success: true, message: "User role updated." };
 }
 
+export async function updateUserStatus(
+  userId: string,
+  status: "ACTIVE" | "SUSPENDED"
+) {
+  const session = await requireAdmin();
+
+  if (session.user.id === userId && status === "SUSPENDED") {
+    throw new Error("You cannot suspend your own account.");
+  }
+
+  if (status !== "ACTIVE" && status !== "SUSPENDED") {
+    throw new Error("Invalid status.");
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { status },
+  });
+
+  revalidatePath("/admin/users");
+
+  return { success: true, message: "User status updated." };
+}
+
 export async function deleteUser(userId: string) {
   const session = await requireAdmin();
 

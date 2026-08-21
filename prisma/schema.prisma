@@ -31,6 +31,7 @@ model User {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   role          Role       @default(USER)
+  status        UserStatus @default(ACTIVE)
   notifyEmail     Boolean  @default(true)
   notifyEstimate  Boolean  @default(true)
   notifyMarket    Boolean  @default(false)
@@ -94,6 +95,11 @@ model Estimate {
   mainBoulevard      Boolean  @default(false)
   parkFacing         Boolean  @default(false)
   updatedAt          DateTime @updatedAt
+  isSaved            Boolean  @default(false)
+  // Snapshot of exactly which factors were applied and by how much,
+  // captured at creation time — so the result page and reports stay
+  // accurate even if an admin later changes a rate/multiplier.
+  breakdown          Json?
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -135,7 +141,25 @@ model RoadRate {
   multiplier Float
 }
 
+// Fixed set of plot/construction adjustment multipliers applied in
+// lib/valuation.ts. Rows are seeded once (matching the multipliers
+// that used to be hardcoded) and are edit-only from the admin UI —
+// the set of keys is tied to the EstimateForm toggles, so creating or
+// deleting keys isn't exposed, only changing their multiplier value.
+model AdjustmentFactor {
+  id         String   @id @default(cuid())
+  key        String   @unique
+  label      String
+  multiplier Float
+  updatedAt  DateTime @updatedAt
+}
+
 enum Role {
   USER
   ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
 }

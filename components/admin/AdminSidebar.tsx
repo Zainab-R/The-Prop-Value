@@ -11,6 +11,7 @@ import {
   Gem,
   Route,
   Calculator,
+  SlidersHorizontal,
   Settings,
   ClipboardList,
   LogOut,
@@ -53,6 +54,11 @@ const links = [
     name: "Amenities",
     href: "/admin/amenities",
     icon: Calculator,
+  },
+  {
+    name: "Adjustment Factors",
+    href: "/admin/adjustment-factors",
+    icon: SlidersHorizontal,
   },
   {
     name: "Settings",

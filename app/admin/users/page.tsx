@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import UsersTable from "@/components/admin/UsersTable";
 import UsersToolbar from "@/components/admin/UsersToolbar";
@@ -8,6 +9,10 @@ const PAGE_SIZE = 15;
 interface PageProps {
   searchParams: Promise<{ q?: string; page?: string }>;
 }
+
+export const metadata: Metadata = {
+  title: "Manage Users | Prop Value",
+};
 
 export default async function UsersPage({ searchParams }: PageProps) {
   const { q, page: pageParam } = await searchParams;

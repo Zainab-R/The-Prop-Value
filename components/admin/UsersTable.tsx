@@ -4,10 +4,10 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { Trash2 } from "lucide-react";
+import { Trash2, ShieldOff, ShieldCheck } from "lucide-react";
 import { User } from "@prisma/client";
 
-import { updateUserRole, deleteUser } from "@/app/admin/users/actions";
+import { updateUserRole, updateUserStatus, deleteUser } from "@/app/admin/users/actions";
 import DeleteDialog from "./DeleteDialog";
 
 interface UsersTableProps {
@@ -29,6 +29,22 @@ export default function UsersTable({ users }: UsersTableProps) {
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : "Failed to update role."
+        );
+      }
+    });
+  }
+
+  function handleStatusToggle(userId: string, currentStatus: "ACTIVE" | "SUSPENDED") {
+    const next = currentStatus === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
+
+    startTransition(async () => {
+      try {
+        await updateUserStatus(userId, next);
+        toast.success(next === "SUSPENDED" ? "User suspended." : "User reactivated.");
+        router.refresh();
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Failed to update status."
         );
       }
     });
@@ -62,6 +78,7 @@ export default function UsersTable({ users }: UsersTableProps) {
               <th className="px-6 py-4">Name</th>
               <th className="px-6 py-4">Email</th>
               <th className="px-6 py-4">Role</th>
+              <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4">Joined</th>
               <th className="px-6 py-4 text-center">Actions</th>
             </tr>
@@ -71,7 +88,7 @@ export default function UsersTable({ users }: UsersTableProps) {
             {users.length === 0 ? (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="py-10 text-center text-slate-500"
                 >
                   No users found.
@@ -121,11 +138,47 @@ export default function UsersTable({ users }: UsersTableProps) {
                     </td>
 
                     <td className="px-6 py-4">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                          user.status === "SUSPENDED"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {user.status === "SUSPENDED" ? "Suspended" : "Active"}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-4">
                       {user.createdAt.toLocaleDateString()}
                     </td>
 
                     <td className="px-6 py-4">
                       <div className="flex justify-center gap-3">
+                        <button
+                          disabled={pending || isSelf}
+                          onClick={() => handleStatusToggle(user.id, user.status)}
+                          title={
+                            isSelf
+                              ? "You cannot suspend your own account"
+                              : user.status === "SUSPENDED"
+                                ? "Reactivate user"
+                                : "Suspend user"
+                          }
+                          className="rounded-lg border border-slate-300 p-2 text-slate-600 hover:bg-slate-100 transition disabled:cursor-not-allowed disabled:opacity-40"
+                          aria-label={
+                            user.status === "SUSPENDED"
+                              ? `Reactivate ${user.name || user.email}`
+                              : `Suspend ${user.name || user.email}`
+                          }
+                        >
+                          {user.status === "SUSPENDED" ? (
+                            <ShieldCheck size={16} />
+                          ) : (
+                            <ShieldOff size={16} />
+                          )}
+                        </button>
+
                         <button
                           disabled={pending || isSelf}
                           onClick={() => setDeleteTarget(user)}

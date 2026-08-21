@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import CompareSelector from "@/components/dashboard/compare/CompareSelector";
 import FadeInUp from "@/components/shared/FadeInUp";
+
+export const metadata: Metadata = {
+  title: "Compare Properties | Prop Value",
+};
 
 export default async function ComparePropertiesPage() {
   const session = await getServerSession(authOptions);

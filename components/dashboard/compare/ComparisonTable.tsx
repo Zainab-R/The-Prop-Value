@@ -1,5 +1,6 @@
 interface Estimate {
   id: string;
+  label: string;
   sector: string;
   propertyType: string;
   propertySize: string;
@@ -8,98 +9,82 @@ interface Estimate {
 }
 
 interface ComparisonTableProps {
-  first: Estimate;
-  second: Estimate;
+  estimates: Estimate[];
 }
 
-export default function ComparisonTable({
-  first,
-  second,
-}: ComparisonTableProps) {
+export default function ComparisonTable({ estimates }: ComparisonTableProps) {
   const formatPrice = (value: string) =>
     new Intl.NumberFormat("en-PK").format(Number(value));
 
+  const rows = [
+    {
+      label: "Sector",
+      values: estimates.map((e) => e.sector),
+    },
+    {
+      label: "Property Type",
+      values: estimates.map((e) => e.propertyType),
+    },
+    {
+      label: "Property Size",
+      values: estimates.map((e) => e.propertySize),
+    },
+    {
+      label: "Minimum Price",
+      values: estimates.map((e) => `PKR ${formatPrice(e.estimatedMin)}`),
+    },
+    {
+      label: "Maximum Price",
+      values: estimates.map((e) => `PKR ${formatPrice(e.estimatedMax)}`),
+    },
+  ];
+
   return (
     <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
-      <table className="w-full">
-        <thead className="bg-orange-500 text-white">
-          <tr>
-            <th className="px-6 py-4 text-left">Attribute</th>
-            <th className="px-6 py-4 text-left">Property 1</th>
-            <th className="px-6 py-4 text-left">Property 2</th>
-          </tr>
-        </thead>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-orange-500 text-white">
+            <tr>
+              <th className="px-6 py-4 text-left">Attribute</th>
+              {estimates.map((estimate) => (
+                <th key={estimate.id} className="px-6 py-4 text-left">
+                  {estimate.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-        <tbody>
-          <TableRow
-            label="Sector"
-            first={first.sector}
-            second={second.sector}
-          />
-
-          <TableRow
-            label="Property Type"
-            first={first.propertyType}
-            second={second.propertyType}
-          />
-
-          <TableRow
-            label="Property Size"
-            first={first.propertySize}
-            second={second.propertySize}
-          />
-
-          <TableRow
-            label="Minimum Price"
-            first={`PKR ${formatPrice(first.estimatedMin)}`}
-            second={`PKR ${formatPrice(second.estimatedMin)}`}
-          />
-
-          <TableRow
-            label="Maximum Price"
-            first={`PKR ${formatPrice(first.estimatedMax)}`}
-            second={`PKR ${formatPrice(second.estimatedMax)}`}
-          />
-        </tbody>
-      </table>
+          <tbody>
+            {rows.map((row) => (
+              <TableRow key={row.label} label={row.label} values={row.values} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
 interface RowProps {
   label: string;
-  first: string;
-  second: string;
+  values: string[];
 }
 
-function TableRow({
-  label,
-  first,
-  second,
-}: RowProps) {
-  const different = first !== second;
+function TableRow({ label, values }: RowProps) {
+  const allSame = values.every((value) => value === values[0]);
 
   return (
     <tr className="border-t">
-      <td className="px-6 py-4 font-semibold">
-        {label}
-      </td>
+      <td className="px-6 py-4 font-semibold">{label}</td>
 
-      <td
-        className={`px-6 py-4 ${
-          different ? "bg-orange-50" : ""
-        }`}
-      >
-        {first}
-      </td>
-
-      <td
-        className={`px-6 py-4 ${
-          different ? "bg-orange-50" : ""
-        }`}
-      >
-        {second}
-      </td>
+      {values.map((value, index) => (
+        <td
+          key={index}
+          className={`px-6 py-4 ${allSame ? "" : "bg-orange-50"}`}
+        >
+          {value}
+        </td>
+      ))}
     </tr>
   );
 }

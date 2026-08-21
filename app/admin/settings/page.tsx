@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
@@ -5,6 +6,10 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 
 import SettingsForm from "./SettingsForm";
+
+export const metadata: Metadata = {
+  title: "Admin Settings | Prop Value",
+};
 
 export default async function AdminSettingsPage() {
   const session = await getServerSession(authOptions);

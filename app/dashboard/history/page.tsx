@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -14,6 +15,10 @@ const PAGE_SIZE = 10;
 interface PageProps {
   searchParams: Promise<{ page?: string }>;
 }
+
+export const metadata: Metadata = {
+  title: "Estimate History | Prop Value",
+};
 
 export default async function SearchHistoryPage({ searchParams }: PageProps) {
   const session = await getServerSession(authOptions);
@@ -43,6 +48,7 @@ export default async function SearchHistoryPage({ searchParams }: PageProps) {
         estimatedMin: true,
         estimatedMax: true,
         createdAt: true,
+        isSaved: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -63,6 +69,7 @@ export default async function SearchHistoryPage({ searchParams }: PageProps) {
     estimatedMin: estimate.estimatedMin.toString(),
     estimatedMax: estimate.estimatedMax.toString(),
     createdAt: estimate.createdAt.toISOString(),
+    isSaved: estimate.isSaved,
   }));
 
   return (
