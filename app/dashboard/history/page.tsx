@@ -75,7 +75,7 @@ export default async function SearchHistoryPage({ searchParams }: PageProps) {
 
         <Link
           href="/dashboard/estimate"
-          className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition-all duration-300 hover:bg-orange-600 active:scale-[0.97]"
+          className="btn-anim rounded-xl bg-orange-500 px-5 py-2.5 font-semibold text-white hover:bg-orange-600"
         >
           + Create New Estimate
         </Link>

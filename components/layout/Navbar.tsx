@@ -99,7 +99,7 @@ export default function Navbar() {
             <>
               <Link
                 href={dashboardHref}
-                className="rounded-xl border border-white/30 px-5 py-2.5 font-medium text-white transition hover:bg-white/10"
+                className="btn-anim rounded-xl border border-white/30 px-5 py-2 font-medium text-white hover:bg-white/10"
               >
                 Dashboard
               </Link>
@@ -114,14 +114,14 @@ export default function Navbar() {
             <>
               <Link
                 href="/login"
-                className="rounded-xl border border-white/30 px-5 py-2.5 font-medium text-white transition hover:bg-white/10"
+                className="btn-anim rounded-xl border border-white/30 px-5 py-2 font-medium text-white hover:bg-white/10"
               >
                 Login
               </Link>
 
               <Link
                 href="/register"
-                className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground shadow-lg shadow-orange-300 transition hover:-translate-y-1 hover:bg-[#ea580c]"
+                className="btn-anim rounded-xl bg-accent px-5 py-2 font-semibold text-accent-foreground shadow-lg shadow-orange-300 hover:bg-[#ea580c]"
               >
                 Get Started
               </Link>
@@ -163,7 +163,7 @@ export default function Navbar() {
               {isLoggedIn ? (
                 <Link
                   href={dashboardHref}
-                  className="mt-4 rounded-xl bg-accent py-3 text-center font-semibold text-accent-foreground"
+                  className="btn-anim mt-4 rounded-xl bg-accent py-2.5 text-center font-semibold text-accent-foreground"
                 >
                   Go to Dashboard
                 </Link>
@@ -171,14 +171,14 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/login"
-                    className="mt-4 rounded-xl border border-white/30 px-4 py-3 text-center text-white"
+                    className="btn-anim mt-4 rounded-xl border border-white/30 px-4 py-2.5 text-center text-white"
                   >
                     Login
                   </Link>
 
                   <Link
                     href="/register"
-                    className="mt-3 rounded-xl bg-accent py-3 text-center font-semibold text-accent-foreground"
+                    className="btn-anim mt-3 rounded-xl bg-accent py-2.5 text-center font-semibold text-accent-foreground"
                   >
                     Get Started
                   </Link>

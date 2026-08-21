@@ -44,7 +44,7 @@ export default function CallToAction() {
 
             <Link
               href="/register"
-              className="inline-flex items-center rounded-xl bg-orange-500 px-8 py-4 font-semibold text-white shadow-xl transition duration-300 hover:-translate-y-1 hover:bg-orange-600"
+              className="btn-anim inline-flex items-center rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-xl hover:bg-orange-600"
             >
               Create Free Account
               <ArrowRight className="ml-3 h-5 w-5" />
@@ -52,7 +52,7 @@ export default function CallToAction() {
 
             <Link
               href="#features"
-              className="rounded-xl border border-white/20 bg-white/10 px-8 py-4 font-semibold text-white backdrop-blur transition hover:bg-white/20"
+              className="btn-anim rounded-xl border border-white/20 bg-white/10 px-6 py-3 font-semibold text-white backdrop-blur hover:bg-white/20"
             >
               Explore Features
             </Link>

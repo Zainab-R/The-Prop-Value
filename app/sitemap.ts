@@ -8,7 +8,7 @@ const featureSlugs = [
   "detailed-analysis",
   "location-intelligence",
   "construction-insights",
-  "admin-managed-pricing",
+  "property-comparison",
 ];
 
 const howItWorksSlugs = [

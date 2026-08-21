@@ -61,7 +61,7 @@ export default function FeaturePage({
         <div className="mt-10">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-4 font-semibold transition hover:bg-white hover:text-primary"
+            className="btn-anim inline-flex items-center gap-2 rounded-full border border-white px-6 py-3 font-semibold hover:bg-white hover:text-primary"
           >
             <ArrowLeft size={18} />
             Back Home
@@ -163,7 +163,7 @@ export default function FeaturePage({
 
           <Link
             href="/register"
-            className="mt-10 inline-flex items-center gap-2 rounded-xl bg-accent px-8 py-4 font-semibold text-accent-foreground shadow-lg transition hover:-translate-y-1 hover:bg-[#ea580c]"
+            className="btn-anim mt-10 inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 font-semibold text-accent-foreground shadow-lg hover:bg-[#ea580c]"
           >
             Get Started
             <ArrowRight size={18} />

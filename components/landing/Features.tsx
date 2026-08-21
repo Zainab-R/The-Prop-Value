@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   ArrowRight,
   Building2,
+  GitCompare,
 } from "lucide-react";
 
 const features = [
@@ -48,11 +49,11 @@ const features = [
     link: "/features/transparent-estimates",
   },
   {
-    title: "Admin Managed Pricing",
+    title: "Property Comparison",
     description:
-      "Sector prices and adjustment factors are managed through the admin panel, allowing market updates without changing application code.",
-    icon: Home,
-    link: "/features/admin-managed-pricing",
+      "Compare two saved estimates side by side, with differing sector, size, and price fields automatically highlighted so you can decide with confidence.",
+    icon: GitCompare,
+    link: "/features/property-comparison",
   },
 ];
 

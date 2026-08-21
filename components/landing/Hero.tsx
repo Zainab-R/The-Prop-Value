@@ -61,7 +61,7 @@ export default function Hero() {
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/register"
-              className="flex items-center rounded-xl bg-orange-500 px-8 py-4 font-semibold text-white shadow-xl shadow-orange-500/30 transition duration-300 hover:-translate-y-1 hover:bg-orange-600"
+              className="btn-anim flex items-center rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-xl shadow-orange-500/30 hover:bg-orange-600"
             >
               Get Started
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -69,7 +69,7 @@ export default function Hero() {
 
             <a
               href="#features"
-              className="rounded-xl border border-white/20 bg-white/90 px-8 py-4 font-semibold text-primary shadow-lg backdrop-blur-sm transition duration-300 hover:bg-white"
+              className="btn-anim rounded-xl border border-white/20 bg-white/90 px-6 py-3 font-semibold text-primary shadow-lg backdrop-blur-sm hover:bg-white"
             >
               Learn More
             </a>

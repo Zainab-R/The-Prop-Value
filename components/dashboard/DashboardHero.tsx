@@ -44,7 +44,7 @@ export default function DashboardHero({ name }: DashboardHeroProps) {
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/dashboard/estimate"
-              className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white transition hover:bg-orange-600"
+              className="btn-anim inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-2.5 font-semibold text-white hover:bg-orange-600"
             >
               <PlusCircle size={18} />
               New Estimate
@@ -52,7 +52,7 @@ export default function DashboardHero({ name }: DashboardHeroProps) {
 
             <Link
               href="/dashboard/compare"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-6 py-3 font-semibold backdrop-blur transition hover:bg-white/20"
+              className="btn-anim inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-2.5 font-semibold backdrop-blur hover:bg-white/20"
             >
               <BarChart3 size={18} />
               Compare Properties

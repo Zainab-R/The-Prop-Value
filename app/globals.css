@@ -106,6 +106,37 @@ body {
 }
 
 /*
+ * Shared button micro-interaction: a slight lift on hover and a
+ * tactile press-down on click/tap. Pure CSS (no framer-motion) so it
+ * costs nothing on routes that don't already ship JS animation.
+ */
+.btn-anim {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.2s ease;
+}
+
+.btn-anim:hover {
+  transform: translateY(-2px);
+}
+
+.btn-anim:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.btn-anim:disabled:hover,
+.btn-anim:disabled:active {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-anim,
+  .btn-anim:hover,
+  .btn-anim:active {
+    transform: none;
+    transition: none;
+  }
+}
+
+/*
  * Pure-CSS entrance animation for page/section mount — used instead
  * of a framer-motion wrapper on dashboard/admin pages so those routes
  * don't pay for framer-motion's JS just to fade content in once.

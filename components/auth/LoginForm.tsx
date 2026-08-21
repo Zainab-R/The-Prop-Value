@@ -77,7 +77,7 @@ export default function LoginForm() {
         type="button"
         onClick={handleGoogleLogin}
         disabled={googleLoading}
-        className="w-full rounded-xl border border-slate-300 bg-white py-4 font-semibold transition hover:bg-slate-50 disabled:opacity-60"
+        className="btn-anim w-full rounded-xl border border-slate-300 bg-white py-3 font-semibold hover:bg-slate-50 disabled:opacity-60"
       >
         {googleLoading ? "Redirecting..." : "Continue with Google"}
       </button>
@@ -136,7 +136,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-orange-500 py-4 font-semibold text-white transition-all duration-200 hover:bg-orange-600 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
+        className="btn-anim w-full rounded-xl bg-orange-500 py-3 font-semibold text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? "Signing In..." : "Login"}
       </button>

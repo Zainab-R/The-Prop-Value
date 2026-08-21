@@ -57,21 +57,21 @@ export default function Footer() {
   <div className="mt-8 flex gap-4">
     <a
       href="#"
-      className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
+      className="btn-anim rounded-xl bg-white/10 p-3 hover:bg-orange-500"
     >
       <Globe size={20} />
     </a>
 
     <a
       href="#"
-      className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
+      className="btn-anim rounded-xl bg-white/10 p-3 hover:bg-orange-500"
     >
       <BadgeCheck size={20} />
     </a>
 
     <a
       href="#"
-      className="rounded-xl bg-white/10 p-3 transition hover:bg-orange-500"
+      className="btn-anim rounded-xl bg-white/10 p-3 hover:bg-orange-500"
     >
       <Send size={20} />
     </a>

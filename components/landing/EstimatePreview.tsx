@@ -76,7 +76,7 @@ export default function EstimatePreview() {
 
           <Link
             href="/register"
-            className="mt-12 inline-flex items-center rounded-xl bg-orange-500 px-8 py-4 font-semibold text-white shadow-lg transition hover:-translate-y-1 hover:bg-orange-600"
+            className="btn-anim mt-12 inline-flex items-center rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-lg hover:bg-orange-600"
           >
             Start Estimating
 

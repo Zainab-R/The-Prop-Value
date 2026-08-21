@@ -127,7 +127,7 @@ export default function RegisterForm() {
 
       <button
         disabled={loading}
-        className="w-full rounded-xl bg-orange-500 py-4 font-semibold text-white transition-all duration-200 hover:bg-orange-600 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
+        className="btn-anim w-full rounded-xl bg-orange-500 py-3 font-semibold text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? "Creating Account..." : "Create Account"}
       </button>
