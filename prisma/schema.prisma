@@ -7,6 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Holds an unverified registration attempt until the user confirms
+// the OTP emailed to them. No User row is created until then, so an
+// abandoned/never-verified signup never leaves a dangling account.
+model PendingRegistration {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  password     String
+  otpHash      String
+  otpExpiresAt DateTime
+  attempts     Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
 model User {
   id            String     @id @default(cuid())
   name          String?

@@ -38,11 +38,11 @@ export default function RegisterForm() {
 
       await axios.post("/api/auth/register", data);
 
-      toast.success("Account created successfully!");
+      toast.success("Verification code sent to your email!");
 
       reset();
 
-      router.push("/login");
+      router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
     } catch (error) {
       const message =
         axios.isAxiosError(error) && error.response?.data?.message

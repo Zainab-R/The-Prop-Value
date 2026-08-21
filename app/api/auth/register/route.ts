@@ -5,6 +5,8 @@ import { ZodError } from "zod";
 import { prisma } from "@/lib/prisma";
 import { registerSchema } from "@/lib/validations/register";
 import { checkRateLimit, getClientIp } from "@/lib/utils/rateLimit";
+import { generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/otp";
+import { sendOtpEmail } from "@/lib/email/resend";
 
 export async function POST(req: NextRequest) {
   try {
@@ -51,24 +53,37 @@ export async function POST(req: NextRequest) {
       12
     );
 
-    // Create user
-    const user = await prisma.user.create({
-      data: {
+    const otp = generateOtp();
+    const otpHash = await hashOtp(otp);
+
+    // Hold the registration until the OTP is verified — no User row
+    // is created yet. Re-registering with the same (still unverified)
+    // email just issues a fresh code.
+    await prisma.pendingRegistration.upsert({
+      where: { email: validatedData.email },
+      create: {
         name: validatedData.name,
         email: validatedData.email,
         password: hashedPassword,
+        otpHash,
+        otpExpiresAt: new Date(Date.now() + OTP_TTL_MS),
+      },
+      update: {
+        name: validatedData.name,
+        password: hashedPassword,
+        otpHash,
+        otpExpiresAt: new Date(Date.now() + OTP_TTL_MS),
+        attempts: 0,
       },
     });
+
+    await sendOtpEmail(validatedData.email, validatedData.name, otp);
 
     return NextResponse.json(
       {
         success: true,
-        message: "User registered successfully.",
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        },
+        message: "Verification code sent to your email.",
+        email: validatedData.email,
       },
       {
         status: 201,
